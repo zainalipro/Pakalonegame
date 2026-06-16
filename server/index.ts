@@ -916,9 +916,12 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         return;
       }
 
-      const seoTitle = `${appItem.name} APK Download - 100% Verified Earning App Pakistan`;
-      const seoDescription = `Download the verified ${appItem.name} APK for Android. ${appItem.tagline || ''}. Minimum withdrawal ${appItem.minCashout || 'Rs. 100'} via EasyPaisa and JazzCash. Real Pakistan Earning Games 2026.`;
-      const seoKeywords = `${appItem.name}, ${appItem.name} APK, ${appItem.name} app download, ${appItem.name} download Pakistan, free download APK Pakistan, earn money online, EasyPaisa earning games, online earning Pakistan`;
+      const settings = await fetchAdminSettings();
+      const customKws = (appItem.keywords && Array.isArray(appItem.keywords)) ? appItem.keywords.join(', ') : (appItem.keywords || '');
+
+      const seoTitle = `${appItem.name} Game Smart (Online Casino Choice) - APK Download for Pakistan`;
+      const seoDescription = `Download the verified ${appItem.name} Game APK (Best Earning App/Casino) for Android. ${appItem.tagline || 'New trending online earning app free download'}. Secure payout in Pakistan under 10 mins using EasyPaisa & JazzCash. ${appItem.detailedReview ? appItem.detailedReview.slice(0, 140).replace(/"/g, '') + '...' : ''}`;
+      const seoKeywords = `${appItem.name}, ${appItem.name} Game, ${appItem.name} APK, ${appItem.name} Game Smart, ${appItem.name} download, ${appItem.name} Pakistan, free download APK, earn money online, EasyPaisa earning games, online earning Pakistan, paisa kamane wala game${customKws ? ', ' + customKws : ''}`;
 
       // Replaces placeholder index title/desc with optimized app ranking properties
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
@@ -931,6 +934,12 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       html = html.replace(/<meta\s+property="og:title"\s+content=".*?"\s*\/?>/gi, `<meta property="og:title" content="${seoTitle}" />`);
       html = html.replace(/<meta\s+property="og:description"\s+content=".*?"\s*\/?>/gi, `<meta property="og:description" content="${seoDescription}" />`);
       
+      // Google Search Console dynamic ownership verification
+      const googleVerification = settings.google_verification || '';
+      if (googleVerification && googleVerification !== 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE') {
+        html = html.replace(/<meta\s+name="google-site-verification"\s+content=".*?"\s*\/?>/gi, `<meta name="google-site-verification" content="${googleVerification}" />`);
+      }
+
       // Structured JSON-LD Data for SoftwareApplication crawl optimization with rating & review
       const ratingValue = appItem.rating || 4.8;
       const reviewCount = Math.floor(ratingValue * 30);
@@ -955,12 +964,17 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         "ratingValue": "${ratingValue}",
         "reviewCount": "${reviewCount}"
       },
-      "description": "${appItem.detailedReview ? appItem.detailedReview.replace(/"/g, '\\"') : seoDescription}"
+      "description": "${appItem.detailedReview ? appItem.detailedReview.replace(/"/g, '\\"') : seoDescription.replace(/"/g, '\\"')}"
     }
     </script>
       `;
       html = html.replace('</head>', `${jsonLd}\n</head>`);
       
+      // Injects custom analytics and header scripts
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+
       res.send(html);
     } catch (err) {
       console.error("GamePage SEO dynamic injector error:", err);
@@ -987,9 +1001,10 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       
       let html = fs.readFileSync(filePath, 'utf-8');
       
-      const seoTitle = "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
-      const seoDescription = "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
-      const seoKeywords = "Pakalone, Pakalone Slots, earning apps in Pakistan, top earning games, PKR withdrawal apps, online earning Pakistan, real money games, verified gaming APKs, easy earning online 2026, JazzCash, EasyPaisa";
+      const settings = await fetchAdminSettings();
+      const seoTitle = settings.custom_meta_title || "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
+      const seoDescription = settings.custom_meta_description || "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
+      const seoKeywords = settings.custom_meta_keywords || "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online";
 
       // Replaces placeholder index title/desc with optimized homepage ranking properties representing verified games portal
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
@@ -1000,6 +1015,12 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       html = html.replace(/<meta\s+property="og:title"\s+content=".*?"\s*\/?>/gi, `<meta property="og:title" content="${seoTitle}" />`);
       html = html.replace(/<meta\s+property="og:description"\s+content=".*?"\s*\/?>/gi, `<meta property="og:description" content="${seoDescription}" />`);
       
+      // Google Search Console dynamic ownership verification
+      const googleVerification = settings.google_verification || '';
+      if (googleVerification && googleVerification !== 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE') {
+        html = html.replace(/<meta\s+name="google-site-verification"\s+content=".*?"\s*\/?>/gi, `<meta name="google-site-verification" content="${googleVerification}" />`);
+      }
+
       // Structured JSON-LD Data for WebSite crawl optimization
       const jsonLd = `
     <!-- Dynamic WebSite search indexing schema tag built specifically for home rankings -->
@@ -1009,7 +1030,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       "@type": "WebSite",
       "name": "Pakalone",
       "url": "https://pakalone.online",
-      "description": "${seoDescription}",
+      "description": "${seoDescription.replace(/"/g, '\\"')}",
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://pakalone.online/?search={search_term_string}",
@@ -1020,6 +1041,11 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       `;
       html = html.replace('</head>', `${jsonLd}\n</head>`);
       
+      // Injects custom analytics and header scripts
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+
       res.send(html);
     } catch (err) {
       console.error("Homepage SEO dynamic injector error:", err);

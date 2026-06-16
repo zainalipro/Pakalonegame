@@ -45,7 +45,12 @@ export default function AdminDashboard() {
     community_twitter: '',
     community_telegram: '',
     portal_theme_mode: 'light',
-    gemini_api_key: ''
+    gemini_api_key: '',
+    google_verification: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
+    custom_meta_title: 'Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan',
+    custom_meta_description: 'Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.',
+    custom_meta_keywords: 'Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online',
+    custom_header_scripts: ''
   });
 
   // User subscription lists
@@ -289,7 +294,12 @@ export default function AdminDashboard() {
           community_twitter: '',
           community_telegram: '',
           portal_theme_mode: 'light',
-          gemini_api_key: ''
+          gemini_api_key: '',
+          google_verification: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
+          custom_meta_title: 'Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan',
+          custom_meta_description: 'Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.',
+          custom_meta_keywords: 'Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online',
+          custom_header_scripts: ''
         });
       }
     } catch (e) {
@@ -1766,6 +1776,113 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       )}
+                    </div>
+                  </div>
+
+                  {/* ADVANCED GOOGLE SEO RANKING META OPTIONS */}
+                  <div className="border-t border-zinc-900/40 pt-6 mt-6">
+                    <h3 className="text-xs font-bold text-yellow-500 uppercase tracking-widest flex items-center gap-2 mb-3">
+                      🏆 Search Engine Optimization (SEO) & Google Rankings Console
+                    </h3>
+                    <p className="text-[11px] text-zinc-500 mb-4 leading-normal">
+                      Fully customize your website's home metadata tags and script headers on-the-fly. This instantly injects optimized rich signals to boost positions in Google Pakistan searches.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Google Search Console Verification Code (Meta Property)</label>
+                        <input
+                          type="text"
+                          value={smtpSettings.google_verification || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, google_verification: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. google-site-verification=YOUR_CODE_HERE"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Homepage Custom SEO Meta Title Tag</label>
+                        <input
+                          type="text"
+                          value={smtpSettings.custom_meta_title || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, custom_meta_title: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Homepage Custom SEO Meta Description</label>
+                        <textarea
+                          rows={3}
+                          value={smtpSettings.custom_meta_description || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, custom_meta_description: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white align-top leading-relaxed text-zinc-200"
+                          placeholder="Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps..."
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Homepage Custom SEO Keywords Tag (Comma-separated)</label>
+                        <textarea
+                          rows={2}
+                          value={smtpSettings.custom_meta_keywords || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, custom_meta_keywords: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white align-top leading-relaxed text-zinc-200"
+                          placeholder="Pakalone, MMY app download, CX777 APK, Jeeto786, EasyPaisa earning games..."
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Custom Tracking Script Headers (e.g., Google Analytics / Tag Manager script block, loaded inside head)</label>
+                        <textarea
+                          rows={3}
+                          value={smtpSettings.custom_header_scripts || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, custom_header_scripts: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs font-mono text-zinc-200 align-top leading-relaxed"
+                          placeholder="e.g. <script async src='https://www.googletagmanager.com/gtag/js?id=G-XXXXX'></script>..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4 bg-zinc-950 p-4 border border-zinc-800 rounded-xl space-y-4">
+                      <h4 className="text-zinc-300 font-bold tracking-wider uppercase text-[10px] text-gold-400">
+                        ⚡ Google Top Rank Checklist & Status Indexing Setup
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] leading-relaxed font-sans text-zinc-400">
+                        <div className="flex items-start gap-2 bg-charcoal-900 border border-zinc-850 p-2.5 rounded-lg">
+                          <span className="text-base text-emerald-500">✓</span>
+                          <div>
+                            <strong className="text-zinc-200 block">XML Dynamic Sitemap Built:</strong>
+                            <span className="block text-[10px] text-zinc-500 mt-0.5">
+                              Active at <a href="/sitemap.xml" target="_blank" className="underline text-gold-400 font-mono">/sitemap.xml</a>. Submit this address in your Google Search Console to crawl all game reviews instantly!
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2 bg-charcoal-900 border border-zinc-850 p-2.5 rounded-lg">
+                          <span className="text-base text-emerald-500">✓</span>
+                          <div>
+                            <strong className="text-zinc-200 block">SoftwareApplication JSON-LD:</strong>
+                            <span className="block text-[10px] text-zinc-500 mt-0.5">
+                              Fully automated Schema.org tags parsed for each game page to capture Google's star rating widgets.
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2 bg-charcoal-900 border border-zinc-850 p-2.5 rounded-lg">
+                          <span className="text-base text-emerald-500">✓</span>
+                          <div>
+                            <strong className="text-zinc-200 block">Google Pakistan Geotargeting:</strong>
+                            <span className="block text-[10px] text-zinc-500 mt-0.5">
+                              Standard geographic coordinate tags (PK) loaded statically inside headers to amplify regional search queries.
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-2 bg-charcoal-900 border border-zinc-850 p-2.5 rounded-lg">
+                          <span className="text-base text-emerald-500">✓</span>
+                          <div>
+                            <strong className="text-zinc-200 block">Roman Urdu Optimization:</strong>
+                            <span className="block text-[10px] text-zinc-500 mt-0.5">
+                              Keywords like "paisa kamane wala game" index flawlessly to ensure direct high-volume traffic.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
