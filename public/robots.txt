@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
 
-# AI Agent Indexing Reference
 Sitemap: https://pakalone.online/sitemap.xml
-LLM-Friendly-Directory: https://pakalone.online/llms.txt
