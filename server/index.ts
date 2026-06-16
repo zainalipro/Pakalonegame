@@ -332,8 +332,16 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         },
         connectionTimeout: 15000, // 15s connection timeout limit to allow robust handshakes on Railway
         greetingTimeout: 15000,
-        socketTimeout: 20000
-      });
+        socketTimeout: 20000,
+        // Force IPv4 lookup explicitly to bypass blocked IPv6 container gateways
+        lookup: (hostname, options, callback) => {
+          if (typeof options === 'function') {
+            callback = options;
+            options = {};
+          }
+          dns.lookup(hostname, { ...options, family: 4 }, callback);
+        }
+      } as any);
 
       const info = await transporter.sendMail({
         from: fromVal,
