@@ -193,11 +193,11 @@ export async function updateDatabasePool(newUrl: string): Promise<{ success: boo
 
 let memorySettings: Record<string, string> = {
   smtp_host: 'smtp.gmail.com',
-  smtp_port: '465',
-  smtp_secure: 'true',
-  smtp_user: 'admin@gmail.com',
+  smtp_port: '587',
+  smtp_secure: 'false',
+  smtp_user: 'pakalone.online@gmail.com',
   smtp_pass: '',
-  smtp_from: 'Pakalone Games <admin@gmail.com>',
+  smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
   community_facebook: 'https://facebook.com',
   community_twitter: 'https://twitter.com',
   community_telegram: 'https://t.me',
@@ -540,6 +540,28 @@ export async function initDb() {
         );
       `);
 
+      // Update/seed custom SMTP settings requested by USER for 'Pak Alone'
+      const smtpConfigs = [
+        { key: 'smtp_host', val: 'smtp.gmail.com' },
+        { key: 'smtp_port', val: '587' },
+        { key: 'smtp_secure', val: 'false' },
+        { key: 'smtp_user', val: 'pakalone.online@gmail.com' },
+        { key: 'smtp_from', val: 'Pak Alone <pakalone.online@gmail.com>' }
+      ];
+      for (const item of smtpConfigs) {
+        await client.query(`
+          INSERT INTO admin_settings (key, value)
+          VALUES ($1, $2)
+          ON CONFLICT (key) DO UPDATE 
+          SET value = $2 
+          WHERE admin_settings.value = 'admin@gmail.com' 
+             OR admin_settings.value = 'Pakalone Games <admin@gmail.com>' 
+             OR admin_settings.value = '465'
+             OR admin_settings.value = 'true'
+             OR admin_settings.value = ''
+        `, [item.key, item.val]);
+      }
+
       await client.query(`
         CREATE TABLE IF NOT EXISTS subscribers (
           id SERIAL PRIMARY KEY,
@@ -877,11 +899,11 @@ export async function fetchAdminSettings() {
   
   const defaults: Record<string, string> = {
     smtp_host: 'smtp.gmail.com',
-    smtp_port: '465',
-    smtp_secure: 'true',
-    smtp_user: 'admin@gmail.com',
+    smtp_port: '587',
+    smtp_secure: 'false',
+    smtp_user: 'pakalone.online@gmail.com',
     smtp_pass: '',
-    smtp_from: 'Pakalone Games <admin@gmail.com>',
+    smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     community_facebook: 'https://facebook.com',
     community_twitter: 'https://twitter.com',
     community_telegram: 'https://t.me',
