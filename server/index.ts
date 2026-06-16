@@ -298,14 +298,82 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
   // Helper to get SMTP transporter and send email
   async function sendEmail({ to, subject, htmlText, simulateOverride = false }: { to: string; subject: string; htmlText: string; simulateOverride?: boolean }) {
     const settings = await fetchAdminSettings();
-    if (!settings.smtp_host || !settings.smtp_user || !settings.smtp_pass) {
-      console.warn("⚠️ SMTP settings are incomplete! Email sending skipped.");
-      return { success: false, error: "SMTP host or authentication user/password is missing in administration dashboard settings." };
-    }
 
     if (simulateOverride) {
       console.log(`[SIMULATED EMAIL HANDSHAKE] To: ${to}, Subject: ${subject}`);
       return { success: true, simulated: true, messageId: "simulated-msg-" + Date.now() };
+    }
+
+    if (settings.use_mailtrap === 'true') {
+      const token = (settings.mailtrap_api_token || "").trim();
+      const inboxId = (settings.mailtrap_inbox_id || "").trim();
+      if (!token) {
+        return { success: false, error: "Mailtrap API token is missing in administration settings." };
+      }
+
+      // Parse from email and name
+      let fromEmail = "info@mailtrap.club";
+      let fromName = "Pak Alone";
+      if (settings.smtp_from) {
+        const match = settings.smtp_from.match(/^(?:"?([^"]*)"?\s)?(?:<(.+?)>|(.+))$/);
+        if (match) {
+          fromName = (match[1] || "").trim() || "Pak Alone";
+          fromEmail = (match[2] || match[3] || "").trim();
+        } else {
+          fromEmail = settings.smtp_from.trim();
+        }
+      }
+
+      const isSandbox = !/^\s*$/.test(inboxId);
+      const url = isSandbox 
+        ? `https://sandbox.api.mailtrap.io/api/send/${inboxId}`
+        : `https://send.api.mailtrap.io/api/send`;
+
+      console.log(`Sending Mailtrap email to: ${to} (Sandbox: ${isSandbox ? 'Yes, Inbox ID ' + inboxId : 'No'})`);
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: {
+              email: fromEmail,
+              name: fromName
+            },
+            to: [
+              {
+                email: to
+              }
+            ],
+            subject: subject,
+            html: htmlText,
+            text: htmlText.replace(/<[^>]*>/g, '') // primitive strip HTML for text fallback
+          })
+        });
+
+        const resBody = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          console.error("❌ Mailtrap API error:", resBody);
+          return { 
+            success: false, 
+            error: `Mailtrap API rejected request: ${resBody.errors ? JSON.stringify(resBody.errors) : (resBody.message || response.statusText)}` 
+          };
+        }
+
+        console.log("✅ Mailtrap email sent successfully!", resBody);
+        return { success: true, messageId: resBody?.message_ids?.[0] || "mailtrap-" + Date.now() };
+      } catch (err: any) {
+        console.error("❌ Mailtrap HTTP API failure:", err);
+        return { success: false, error: `Mailtrap API call failed: ${err.message || err}` };
+      }
+    }
+
+    if (!settings.smtp_host || !settings.smtp_user || !settings.smtp_pass) {
+      console.warn("⚠️ SMTP settings are incomplete! Email sending skipped.");
+      return { success: false, error: "SMTP host or authentication user/password is missing in administration dashboard settings." };
     }
 
     const host = (settings.smtp_host || "").trim();

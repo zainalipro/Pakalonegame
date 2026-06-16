@@ -41,6 +41,9 @@ export default function AdminDashboard() {
     smtp_user: 'pakalone.online@gmail.com',
     smtp_pass: 'bacutoidaqscmsoh',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
+    use_mailtrap: 'false',
+    mailtrap_api_token: '',
+    mailtrap_inbox_id: '',
     community_facebook: '',
     community_twitter: '',
     community_telegram: '',
@@ -283,24 +286,10 @@ export default function AdminDashboard() {
       const res = await fetch('/api/admin/settings');
       if (res.ok) {
         const data = await res.json();
-        setSmtpSettings(data || {
-          smtp_host: 'smtp.gmail.com',
-          smtp_port: '587',
-          smtp_secure: 'false',
-          smtp_user: 'pakalone.online@gmail.com',
-          smtp_pass: 'bacutoidaqscmsoh',
-          smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
-          community_facebook: '',
-          community_twitter: '',
-          community_telegram: '',
-          portal_theme_mode: 'light',
-          gemini_api_key: '',
-          google_verification: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
-          custom_meta_title: 'Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan',
-          custom_meta_description: 'Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.',
-          custom_meta_keywords: 'Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online',
-          custom_header_scripts: ''
-        });
+        setSmtpSettings(prev => ({
+          ...prev,
+          ...data
+        }));
       }
     } catch (e) {
       console.error("Failed to read SMTP settings:", e);
@@ -650,7 +639,32 @@ export default function AdminDashboard() {
       showToast('Please specify a valid test recipient email address.', 'error');
       return;
     }
-    const htmlBody = `
+    const isMailtrapActive = smtpSettings.use_mailtrap === 'true';
+    const htmlBody = isMailtrapActive ? `
+      <div style="font-family: sans-serif; padding: 24px; max-width: 600px; margin: 0 auto; border: 1px solid #f97316; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
+        <h2 style="color: #ea580c; margin-top: 0; border-bottom: 2px solid #ea580c; padding-bottom: 8px;">✔️ Mailtrap API Session Confirmed!</h2>
+        <p>Excellent! Your custom <strong>Mailtrap HTTP Delivery Engine</strong> is registered and fully operational inside <strong>Pakalone Games</strong> portal endpoints.</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px;">
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; width: 140px;">Delivery Mode</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-family: monospace; color: #ea580c; font-weight: bold;">Mailtrap HTTP API (Port 443)</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">API Token ID</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-family: monospace;">••••••••${smtpSettings.mailtrap_api_token ? smtpSettings.mailtrap_api_token.slice(-4) : 'none'}</td>
+          </tr>
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Target Sandbox ID</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-family: monospace;">${smtpSettings.mailtrap_inbox_id || 'Production Mode (Live Delivery)'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Sender Header</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">${smtpSettings.smtp_from || 'info@mailtrap.club'}</td>
+          </tr>
+        </table>
+        <p style="margin-top: 20px; font-size: 12px; color: #64748b;">This verification message was sent successfully over HTTPS. You may close this notification safely.</p>
+      </div>
+    ` : `
       <div style="font-family: sans-serif; padding: 24px; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
         <h2 style="color: #10b981; margin-top: 0; border-bottom: 2px solid #10b981; padding-bottom: 8px;">✔️ SMTP Connection Confirmed!</h2>
         <p>Excellent! Your custom SMTP system settings are correctly registered and connected onto <strong>Pakalone Games</strong> database repository nodes.</p>
@@ -1507,81 +1521,163 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <form onSubmit={handleSaveSmtp} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP Host Server</label>
-                      <input
-                        type="text"
-                        required
-                        value={smtpSettings.smtp_host}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_host: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                        placeholder="e.g. smtp.gmail.com"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP Port Number</label>
-                      <input
-                        type="text"
-                        required
-                        value={smtpSettings.smtp_port}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_port: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                        placeholder="e.g. 587 or 465"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Use Secure Connection</label>
-                      <select
-                        value={smtpSettings.smtp_secure}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_secure: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                 <form onSubmit={handleSaveSmtp} className="space-y-4">
+                  {/* Delivery Mode Choice */}
+                  <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/80 mb-2">
+                    <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-2.5">Email Delivery Engine Protocol</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false' })}
+                        className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                          smtpSettings.use_mailtrap !== 'true'
+                            ? 'bg-gold-500/10 border-gold-500/50 text-gold-400'
+                            : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
+                        }`}
                       >
-                        <option value="false">No / STARTTLS (Port 587)</option>
-                        <option value="true">Yes / SSL (Port 465)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
-                      <input
-                        type="text"
-                        required
-                        value={smtpSettings.smtp_from}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                        placeholder="e.g. Pakalone VIP <admin@gmail.com>"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP authorized User email</label>
-                      <input
-                        type="email"
-                        required
-                        value={smtpSettings.smtp_user}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_user: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                        placeholder="Username account mail"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP App Password</label>
-                      <input
-                        type="password"
-                        required
-                        value={smtpSettings.smtp_pass}
-                        onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_pass: e.target.value })}
-                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                        placeholder="App specific token string"
-                      />
+                        <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
+                          <span className={smtpSettings.use_mailtrap !== 'true' ? 'text-gold-400' : 'text-zinc-500'}>●</span>
+                          Standard SMTP Protocol
+                        </div>
+                        <div className="text-3xs text-zinc-400 leading-normal">
+                          Send via Gmail, Outlook, or custom SMTP relays. Subject to local firewall rules on ports 587/465.
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'true' })}
+                        className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                          smtpSettings.use_mailtrap === 'true'
+                            ? 'bg-amber-500/10 border-amber-500/50 text-amber-400'
+                            : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
+                        }`}
+                      >
+                        <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
+                          <span className={smtpSettings.use_mailtrap === 'true' ? 'text-amber-400' : 'text-zinc-500'}>●</span>
+                          Mailtrap API (Recommended ⚡)
+                        </div>
+                        <div className="text-3xs text-zinc-400 leading-normal">
+                          Sends over wide-open HTTPS Port 443. Fully operational in sandbox containers without socket block issues!
+                        </div>
+                      </button>
                     </div>
                   </div>
+
+                  {smtpSettings.use_mailtrap !== 'true' ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP Host Server</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_host}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_host: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. smtp.gmail.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP Port Number</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_port}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_port: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. 587 or 465"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Use Secure Connection</label>
+                        <select
+                          value={smtpSettings.smtp_secure}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_secure: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                        >
+                          <option value="false">No / STARTTLS (Port 587)</option>
+                          <option value="true">Yes / SSL (Port 465)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_from}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. Pakalone VIP <admin@gmail.com>"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP authorized User email</label>
+                        <input
+                          type="email"
+                          required
+                          value={smtpSettings.smtp_user}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_user: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="Username account mail"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP App Password</label>
+                        <input
+                          type="password"
+                          required
+                          value={smtpSettings.smtp_pass}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_pass: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="App specific token string"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_from}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. Pak Alone <zainalipro83@gmail.com>"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1 font-mono text-amber-400">Mailtrap API Token</label>
+                        <input
+                          type="password"
+                          required
+                          value={smtpSettings.mailtrap_api_token || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_api_token: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-400 text-xs text-white placeholder-zinc-700"
+                          placeholder="Paste API token e.g. 19ed..."
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Mailtrap Sandbox Inbox ID (Optional for Sandbox Testing)</label>
+                        <input
+                          type="text"
+                          value={smtpSettings.mailtrap_inbox_id || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_inbox_id: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="Leave empty for production delivery, or provide Sandbox Inbox ID to route into virtual sandbox"
+                        />
+                        <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
+                          If left blank, Mailtrap transactional production delivery will be utilized. If a Sandbox Inbox ID is supplied, mail passes through virtual intercept routing without delivering live emails, perfect for standard sandbox validation!
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   
                   <button
                     type="submit"
                     className="bg-gold-500 hover:bg-gold-400 text-zinc-950 font-bold py-2.5 px-6 rounded-lg text-xs tracking-wider transition cursor-pointer"
                   >
-                    SAVE SMTP CREDENTIALS
+                    SAVE MAIL CONFIGURATION
                   </button>
                 </form>
 
