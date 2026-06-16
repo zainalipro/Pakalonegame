@@ -467,7 +467,38 @@ export function getSeedApps(): any[] {
 let memorySubscribers: any[] = [];
 let memoryMessages: any[] = [];
 
-let memoryApps: any[] = getSeedApps();
+const APPS_FILE = path.join(process.cwd(), 'server', 'apps_config.json');
+
+let memoryApps: any[] = [];
+
+try {
+  if (fs.existsSync(APPS_FILE)) {
+    const fileContent = fs.readFileSync(APPS_FILE, 'utf-8');
+    const parsed = JSON.parse(fileContent);
+    if (Array.isArray(parsed)) {
+      memoryApps = parsed;
+      console.log("⚙️ Loaded offline custom apps list from local apps_config.json cache.");
+    } else {
+      memoryApps = getSeedApps();
+    }
+  } else {
+    memoryApps = getSeedApps();
+  }
+} catch (err) {
+  console.warn("Could not load offline local apps cache file:", err);
+  memoryApps = getSeedApps();
+}
+
+function saveMemoryAppsLocally() {
+  try {
+    const dir = path.dirname(APPS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(APPS_FILE, JSON.stringify(memoryApps, null, 2), 'utf-8');
+    console.log("💾 Offline apps configuration persisted to apps_config.json cache file.");
+  } catch (err) {
+    console.error("Failed to write offline local apps cache file:", err);
+  }
+}
 
 export async function initDb() {
   console.log("Initializing database connection...");
@@ -723,11 +754,18 @@ export async function fetchAllApps() {
         });
         
         if (appsList.length === 0) {
-          console.log("No apps found in Firestore; automatically seeding premium trusted Pakistani slots apps...");
+          const settings = await fetchAdminSettings();
+          if (settings.has_seeded_apps === "true") {
+            console.log("Database has been marked as already seeded; preserving empty state as requested by the admin.");
+            return [];
+          }
+
+          console.log("No apps found in Firestore and seeding flag is false; automatically seeding premium trusted Pakistani slots apps...");
           const seedAppsList = getSeedApps();
           for (const app of seedAppsList) {
             await saveAppReview(app.id, app);
           }
+          await saveAdminSettings({ ...settings, has_seeded_apps: "true" });
           return seedAppsList.map(app => ({
             ...app,
             createdAt: new Date(app.createdAt)
@@ -870,6 +908,7 @@ export async function saveAppReview(id: string, app: any) {
     } else {
       memoryApps.push(updatedRecord);
     }
+    saveMemoryAppsLocally();
     return updatedRecord;
   }
 
@@ -993,6 +1032,7 @@ export async function removeAppReview(id: string) {
 
   if (useMemoryDb) {
     memoryApps = memoryApps.filter(app => app.id !== id);
+    saveMemoryAppsLocally();
     return true;
   }
   await pool.query('DELETE FROM apps WHERE id = $1', [id]);
