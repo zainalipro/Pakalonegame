@@ -82,7 +82,7 @@ export default function AdminDashboard() {
   const [sendingAnnounce, setSendingAnnounce] = useState(false);
   const [testEmailAddress, setTestEmailAddress] = useState('');
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
-  const [smtpSimulation, setSmtpSimulation] = useState(true);
+  const [smtpSimulation, setSmtpSimulation] = useState(false);
   const [simulatedMailContent, setSimulatedMailContent] = useState<string | null>(null);
 
   // Dialog State

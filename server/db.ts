@@ -191,6 +191,8 @@ export async function updateDatabasePool(newUrl: string): Promise<{ success: boo
   }
 }
 
+const SETTINGS_FILE = path.join(process.cwd(), 'server', 'admin_settings_config.json');
+
 let memorySettings: Record<string, string> = {
   smtp_host: 'smtp.gmail.com',
   smtp_port: '587',
@@ -203,6 +205,20 @@ let memorySettings: Record<string, string> = {
   community_telegram: 'https://t.me',
   portal_theme_mode: 'light'
 };
+
+// Try loading offline saved settings from filesystem cache on startup to survive container reboots
+try {
+  if (fs.existsSync(SETTINGS_FILE)) {
+    const fileContent = fs.readFileSync(SETTINGS_FILE, 'utf-8');
+    const parsed = JSON.parse(fileContent);
+    if (parsed && typeof parsed === 'object') {
+      memorySettings = { ...memorySettings, ...parsed };
+      console.log("⚙️ Loaded offline custom administrator and SMTP settings from config cache.");
+    }
+  }
+} catch (err) {
+  console.warn("Could not load offline local settings cache file:", err);
+}
 export function getSeedApps(): any[] {
   return [
     {
@@ -1035,6 +1051,20 @@ export async function fetchAdminSettings() {
 
 export async function saveAdminSettings(settings: Record<string, string>) {
   const provider = getActiveDbProvider();
+  
+  // Mutate memory cache
+  memorySettings = { ...memorySettings, ...settings };
+  
+  // Persist memory cache locally to survive container compilation / restarts
+  try {
+    const dir = path.dirname(SETTINGS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(memorySettings, null, 2), 'utf-8');
+    console.log("💾 Offline SMTP and general administration settings persisted to config cache file.");
+  } catch (err) {
+    console.error("Failed to write offline local settings cache file:", err);
+  }
+
   if (provider === 'firebase') {
     const firestore = getFirebaseFirestore();
     if (firestore) {
@@ -1050,7 +1080,6 @@ export async function saveAdminSettings(settings: Record<string, string>) {
   }
 
   if (useMemoryDb) {
-    memorySettings = { ...memorySettings, ...settings };
     return memorySettings;
   }
   try {
@@ -1064,7 +1093,6 @@ export async function saveAdminSettings(settings: Record<string, string>) {
     return fetchAdminSettings();
   } catch (error) {
     console.error("saveAdminSettings failed, fall back to memory setting mutation:", error);
-    memorySettings = { ...memorySettings, ...settings };
     return memorySettings;
   }
 }
