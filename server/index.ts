@@ -829,6 +829,65 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     }
   });
 
+  // High-fidelity server-side Dynamic SEO metadata injector for root homepage
+  app.get(["/", "/index.html"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      
+      const seoTitle = "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
+      const seoDescription = "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
+      const seoKeywords = "Pakalone, Pakalone Slots, earning apps in Pakistan, top earning games, PKR withdrawal apps, online earning Pakistan, real money games, verified gaming APKs, easy earning online 2026, JazzCash, EasyPaisa";
+
+      // Replaces placeholder index title/desc with optimized homepage ranking properties representing verified games portal
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      html = html.replace(/<meta\s+name="keywords"\s+content=".*?"\s*\/?>/gi, `<meta name="keywords" content="${seoKeywords}" />`);
+      
+      // Open Graph tags for high priority crawler indices
+      html = html.replace(/<meta\s+property="og:title"\s+content=".*?"\s*\/?>/gi, `<meta property="og:title" content="${seoTitle}" />`);
+      html = html.replace(/<meta\s+property="og:description"\s+content=".*?"\s*\/?>/gi, `<meta property="og:description" content="${seoDescription}" />`);
+      
+      // Structured JSON-LD Data for WebSite crawl optimization
+      const jsonLd = `
+    <!-- Dynamic WebSite search indexing schema tag built specifically for home rankings -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Pakalone",
+      "url": "https://pakalone.online",
+      "description": "${seoDescription}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://pakalone.online/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+      `;
+      html = html.replace('</head>', `${jsonLd}\n</head>`);
+      
+      res.send(html);
+    } catch (err) {
+      console.error("Homepage SEO dynamic injector error:", err);
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      res.sendFile(filePath);
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
