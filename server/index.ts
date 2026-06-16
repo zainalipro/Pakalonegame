@@ -104,9 +104,9 @@ async function startServer() {
 ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
 1. SEO Friendly Title
 2. SEO Meta Description
-3. 5 SEO Keywords (tags)
+3. A large set of SEO Keywords covering Roman Urdu (e.g., "paisa kamane wala game", "real dollar app"), native Urdu text, direct gameplay categories (casino, slot, mines, ludo), and EasyPaisa/JazzCash methods.
 4. A short promotional newsletter email to send to the users (in a friendly, engaging tone).
-5. A complete draft review object containing an icon emoji, realistic download count (e.g., 100K+ or 500K+), rating (4.5 to 4.9), estimated APK size (e.g., 34 MB), typical minimum cashout (e.g., Rs. 100 or Rs. 200), withdrawal methods list, tagline, professional detailed review in English, persuasive review in fine Urdu script for Pakistani audiences, realistic pros and cons lists, highlight badge (e.g., HOT, TRUSTED, VERIFIED), and estimated daily active players count. Ensure all estimates suit typical lightweight Pakistani mobile space conditions.`;
+5. A complete draft review object containing an icon emoji, realistic download count (e.g., 100K+ or 500K+), rating (4.5 to 4.9), estimated APK size (e.g., 34 MB), typical minimum cashout (e.g., Rs. 100 or Rs. 200), withdrawal methods list, tagline, professional detailed review in English, persuasive review in fine Urdu script for Pakistani audiences, realistic pros and cons lists, highlight badge (e.g., HOT, TRUSTED, VERIFIED), and estimated daily active players count. Ensure all estimates suit typical lightweight Pakistani mobile space conditions. Include extra details like Android requirement, developer, package name, release date, withdraw speed, support contact, and an extensive list of varied SEO search keywords.`;
 
       const schema = {
         type: Type.OBJECT,
@@ -130,9 +130,21 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
               pros: { type: Type.ARRAY, items: { type: Type.STRING }, description: "3 prominent highlights of the app" },
               cons: { type: Type.ARRAY, items: { type: Type.STRING }, description: "2 physical drawbacks of the app" },
               badge: { type: Type.STRING, description: "A highlight word like HOT, TRUSTED, VERIFIED, NEW" },
-              dailyUsers: { type: Type.STRING, description: "Estimated active players, e.g. 10,000+" }
+              dailyUsers: { type: Type.STRING, description: "Estimated active players, e.g. 10,000+" },
+              keywords: { type: Type.ARRAY, items: { type: Type.STRING }, description: "Generate an extensive list of 12-18 versatile tags representing diverse search styles: SEO terms, Roman Urdu queries (e.g. paisa kamane wala app), Urdu script terms, payment-centric tags, and slot/card mechanics tags." },
+              androidRequirement: { type: Type.STRING, description: "E.g., Android 5.0 and up" },
+              developer: { type: Type.STRING, description: "Developer name or software studio e.g. Pak Games Studio" },
+              packageName: { type: Type.STRING, description: "Android bundle bundle ID e.g. com.pakalone.slots" },
+              releaseDate: { type: Type.STRING, description: "E.g. 2026-03-15" },
+              withdrawSpeed: { type: Type.STRING, description: "Withdrawal processing speed e.g. Instant (under 10 mins)" },
+              supportContact: { type: Type.STRING, description: "Telegram or support contact info, e.g. @PakAloneSupport_Bot" }
             },
-            required: ["logo", "rating", "downloads", "apkSize", "minCashout", "methods", "tagline", "detailedReview", "detailedReviewUrdu", "pros", "cons", "badge", "dailyUsers"]
+            required: [
+              "logo", "rating", "downloads", "apkSize", "minCashout", "methods", "tagline", 
+              "detailedReview", "detailedReviewUrdu", "pros", "cons", "badge", "dailyUsers",
+              "keywords", "androidRequirement", "developer", "packageName", "releaseDate", 
+              "withdrawSpeed", "supportContact"
+            ]
           }
         },
         required: ["seoTitle", "seoDescription", "seoKeywords", "promotionalEmail", "draft"]

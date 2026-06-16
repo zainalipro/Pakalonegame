@@ -136,6 +136,13 @@ export default function AdminDashboard() {
           cons: prev.cons && prev.cons.length > 0 ? prev.cons : (data.draft.cons || []),
           badge: prev.badge || data.draft.badge || 'HOT',
           dailyUsers: prev.dailyUsers || data.draft.dailyUsers || '5,000+',
+          keywords: prev.keywords && prev.keywords.length > 0 ? prev.keywords : (data.draft.keywords || []),
+          androidRequirement: prev.androidRequirement || data.draft.androidRequirement || '',
+          developer: prev.developer || data.draft.developer || '',
+          packageName: prev.packageName || data.draft.packageName || '',
+          releaseDate: prev.releaseDate || data.draft.releaseDate || '',
+          withdrawSpeed: prev.withdrawSpeed || data.draft.withdrawSpeed || '',
+          supportContact: prev.supportContact || data.draft.supportContact || '',
         }));
         showToast('AI Draft successfully applied to form fields! ⚡');
       } else {
@@ -753,7 +760,9 @@ export default function AdminDashboard() {
       name: '', logo: '', rating: 5, downloads: '', apkSize: '',
       minCashout: '', methods: [], tagline: '', detailedReview: '',
       detailedReviewUrdu: '', pros: [], cons: [], badge: '', apkUrl: '', dailyUsers: '',
-      previewImages: [], videoUrl: ''
+      previewImages: [], videoUrl: '',
+      keywords: [], androidRequirement: '', developer: '',
+      packageName: '', releaseDate: '', withdrawSpeed: '', supportContact: ''
     });
     setEditAppId(null);
     setIsEditing(true);
@@ -763,7 +772,14 @@ export default function AdminDashboard() {
     setEditApp({ 
       ...app,
       previewImages: app.previewImages || [],
-      videoUrl: app.videoUrl || ''
+      videoUrl: app.videoUrl || '',
+      keywords: app.keywords || [],
+      androidRequirement: app.androidRequirement || '',
+      developer: app.developer || '',
+      packageName: app.packageName || '',
+      releaseDate: app.releaseDate || '',
+      withdrawSpeed: app.withdrawSpeed || '',
+      supportContact: app.supportContact || ''
     });
     setEditAppId(app.id!);
     setIsEditing(true);
@@ -788,6 +804,9 @@ export default function AdminDashboard() {
       }
       if (typeof payload.previewImages === 'string') {
         payload.previewImages = payload.previewImages.split(',').map((s: string) => s.trim()).filter(Boolean);
+      }
+      if (typeof payload.keywords === 'string') {
+         payload.keywords = payload.keywords.split(',').map((s: string) => s.trim()).filter(Boolean);
       }
 
       payload.rating = Number(payload.rating) || 5;
@@ -1132,6 +1151,80 @@ export default function AdminDashboard() {
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Gameplay Video URL (YouTube Embed or MP4 link, Optional)</label>
                   <input value={editApp.videoUrl || ''} onChange={e => setEditApp({...editApp, videoUrl: e.target.value})} className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm" placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ" />
+                </div>
+
+                <div className="md:col-span-2 border-t border-zinc-900 pt-6 my-4">
+                  <h3 className="text-sm font-bold text-yellow-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    ⚡ SEO Keywords & Rich Game Metadata (AI-Assisted)
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">
+                        Game Search Keywords (Comma separated - Roman Urdu, Urdu scripts, game categories, payment tags)
+                      </label>
+                      <textarea 
+                        rows={2} 
+                        value={editApp.keywords ? (Array.isArray(editApp.keywords) ? editApp.keywords.join(', ') : editApp.keywords) : ''} 
+                        onChange={e => setEditApp({...editApp, keywords: e.target.value as any})} 
+                        placeholder="e.g. paisa kamane wala game, pinup pakistan, easy paisa earning, live points exchange"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm align-top leading-relaxed text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Android Requirement</label>
+                      <input 
+                        value={editApp.androidRequirement || ''} 
+                        onChange={e => setEditApp({...editApp, androidRequirement: e.target.value})} 
+                        placeholder="e.g. Android 5.0 and up"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Developer Studio</label>
+                      <input 
+                        value={editApp.developer || ''} 
+                        onChange={e => setEditApp({...editApp, developer: e.target.value})} 
+                        placeholder="e.g. Pak Games Studio"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-200 mb-2">Package Name (Bundle ID)</label>
+                      <input 
+                        value={editApp.packageName || ''} 
+                        onChange={e => setEditApp({...editApp, packageName: e.target.value})} 
+                        placeholder="e.g. com.pakalone.slots"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Release Date</label>
+                      <input 
+                        value={editApp.releaseDate || ''} 
+                        onChange={e => setEditApp({...editApp, releaseDate: e.target.value})} 
+                        placeholder="e.g. 2026-06-15"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Withdraw Speed</label>
+                      <input 
+                        value={editApp.withdrawSpeed || ''} 
+                        onChange={e => setEditApp({...editApp, withdrawSpeed: e.target.value})} 
+                        placeholder="e.g. Instant (under 10 mins)"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Support Contact Info</label>
+                      <input 
+                        value={editApp.supportContact || ''} 
+                        onChange={e => setEditApp({...editApp, supportContact: e.target.value})} 
+                        placeholder="e.g. Telegram: @PakAlone_SupportBot"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-sm text-zinc-200" 
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Game Preview Images (Upload manually & manage list)</label>

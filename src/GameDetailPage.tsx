@@ -440,22 +440,63 @@ export default function GameDetailPage() {
         </div>
 
         {/* Detailed Game Specifications Table */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
-            <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">APK SIZE</span>
-            <span className="text-lg font-black text-blue-950 mt-1 block">{app.apkSize}</span>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
+              <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">APK SIZE</span>
+              <span className="text-lg font-black text-blue-950 mt-1 block">{app.apkSize}</span>
+            </div>
+            <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
+              <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">MINIMUM CASHOUT</span>
+              <span className="text-lg font-black text-emerald-700 mt-1 block">{app.minCashout}</span>
+            </div>
+            <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
+              <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">DAILY USERS</span>
+              <span className="text-lg font-black text-blue-950 mt-1 block">{app.dailyUsers}</span>
+            </div>
+            <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
+              <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">CASHOUT CHANNELS</span>
+              <span className="text-xs font-black text-blue-700 mt-1.5 block leading-tight">{app.methods.join(', ')}</span>
+            </div>
           </div>
-          <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
-            <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">MINIMUM CASHOUT</span>
-            <span className="text-lg font-black text-emerald-700 mt-1 block">{app.minCashout}</span>
-          </div>
-          <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
-            <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">DAILY USERS</span>
-            <span className="text-lg font-black text-blue-950 mt-1 block">{app.dailyUsers}</span>
-          </div>
-          <div className="bg-white border border-blue-100 p-4 rounded-2xl text-center shadow-sm">
-            <span className="text-2xs font-extrabold text-slate-400 uppercase tracking-widest block">CASHOUT CHANNELS</span>
-            <span className="text-xs font-black text-blue-700 mt-1.5 block leading-tight">{app.methods.join(', ')}</span>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+            {app.androidRequirement && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement</span>
+                <span className="text-xs font-extrabold text-slate-800 mt-0.5 block truncate" title={app.androidRequirement}>{app.androidRequirement}</span>
+              </div>
+            )}
+            {app.developer && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Developer</span>
+                <span className="text-xs font-extrabold text-slate-800 mt-0.5 block truncate" title={app.developer}>{app.developer}</span>
+              </div>
+            )}
+            {app.packageName && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Package ID</span>
+                <span className="text-2xs font-mono font-bold text-slate-600 mt-0.5 block truncate" title={app.packageName}>{app.packageName}</span>
+              </div>
+            )}
+            {app.releaseDate && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Release Date</span>
+                <span className="text-xs font-extrabold text-slate-800 mt-0.5 block truncate">{app.releaseDate}</span>
+              </div>
+            )}
+            {app.withdrawSpeed && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl col-span-1 text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Withdraw Speed</span>
+                <span className="text-xs font-extrabold text-emerald-600 mt-0.5 block truncate" title={app.withdrawSpeed}>{app.withdrawSpeed}</span>
+              </div>
+            )}
+            {app.supportContact && (
+              <div className="bg-white hover:bg-zinc-50 border border-blue-100 p-3 rounded-2xl col-span-1 text-center shadow-2xs transition-all">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Official Support</span>
+                <span className="text-xs font-extrabold text-blue-600 mt-0.5 block truncate" title={app.supportContact}>{app.supportContact}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -521,6 +562,22 @@ export default function GameDetailPage() {
                 </ul>
               </div>
             </div>
+
+            {/* SEO Keywords tags block */}
+            {app.keywords && app.keywords.length > 0 && (
+              <div className="bg-white border border-blue-100 rounded-3xl p-6 shadow-sm text-left">
+                <h4 className="font-display font-bold text-slate-400 mb-3 text-2xs uppercase tracking-widest">
+                  🏷️ Trending Search Tags & Keywords
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {app.keywords.map((kw, i) => (
+                    <span key={i} className="text-2xs bg-slate-50 hover:bg-amber-50 hover:text-amber-700 text-slate-650 border border-slate-200/50 px-3 py-1.5 rounded-xl font-bold transition duration-150 cursor-pointer">
+                      #{kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Media previews block */}
             {(app.videoUrl || (app.previewImages && app.previewImages.length > 0)) && (

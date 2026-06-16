@@ -533,6 +533,13 @@ export async function initDb() {
       await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS preview_images JSONB DEFAULT '[]'::jsonb`);
       await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS video_url TEXT`);
       await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS clicks INT DEFAULT 0`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS keywords JSONB DEFAULT '[]'::jsonb`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS android_requirement VARCHAR(255)`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS developer VARCHAR(255)`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS package_name VARCHAR(255)`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS release_date VARCHAR(255)`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS withdraw_speed VARCHAR(255)`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS support_contact VARCHAR(255)`);
 
       await client.query(`
         CREATE TABLE IF NOT EXISTS admin_settings (
@@ -654,7 +661,14 @@ function mapRowToAppReview(row: any): any {
     createdAt: row.created_at,
     previewImages: typeof row.preview_images === 'string' ? JSON.parse(row.preview_images) : (row.preview_images || []),
     videoUrl: row.video_url || '',
-    clicks: parseInt(row.clicks) || 0
+    clicks: parseInt(row.clicks) || 0,
+    keywords: typeof row.keywords === 'string' ? JSON.parse(row.keywords) : (row.keywords || []),
+    androidRequirement: row.android_requirement || '',
+    developer: row.developer || '',
+    packageName: row.package_name || '',
+    releaseDate: row.release_date || '',
+    withdrawSpeed: row.withdraw_speed || '',
+    supportContact: row.support_contact || ''
   };
 }
 
@@ -788,6 +802,13 @@ export async function saveAppReview(id: string, app: any) {
           cons: app.cons || [],
           previewImages: app.previewImages || [],
           videoUrl: app.videoUrl || '',
+          keywords: app.keywords || [],
+          androidRequirement: app.androidRequirement || '',
+          developer: app.developer || '',
+          packageName: app.packageName || '',
+          releaseDate: app.releaseDate || '',
+          withdrawSpeed: app.withdrawSpeed || '',
+          supportContact: app.supportContact || '',
           createdAt: app.createdAt ? new Date(app.createdAt).toISOString() : new Date().toISOString()
         });
         return findAppById(id);
@@ -819,6 +840,13 @@ export async function saveAppReview(id: string, app: any) {
       previewImages: app.previewImages || [],
       videoUrl: app.videoUrl || '',
       clicks: app.clicks || 0,
+      keywords: app.keywords || [],
+      androidRequirement: app.androidRequirement || '',
+      developer: app.developer || '',
+      packageName: app.packageName || '',
+      releaseDate: app.releaseDate || '',
+      withdrawSpeed: app.withdrawSpeed || '',
+      supportContact: app.supportContact || '',
       createdAt: new Date()
     };
     if (existingIndex >= 0) {
@@ -835,6 +863,7 @@ export async function saveAppReview(id: string, app: any) {
   const consJson = JSON.stringify(app.cons || []);
   const previewImagesJson = JSON.stringify(app.previewImages || []);
   const videoUrlRaw = app.videoUrl || '';
+  const keywordsJson = JSON.stringify(app.keywords || []);
 
   if (check.rows.length > 0) {
     await pool.query(`
@@ -855,24 +884,36 @@ export async function saveAppReview(id: string, app: any) {
         apk_url = $14,
         daily_users = $15,
         preview_images = $16,
-        video_url = $17
-      WHERE id = $18
+        video_url = $17,
+        keywords = $18,
+        android_requirement = $19,
+        developer = $20,
+        package_name = $21,
+        release_date = $22,
+        withdraw_speed = $23,
+        support_contact = $24
+      WHERE id = $25
     `, [
       app.name, app.logo, app.rating, app.downloads, app.apkSize, app.minCashout,
       methodsJson, app.tagline, app.detailedReview, app.detailedReviewUrdu,
-      prosJson, consJson, app.badge, app.apkUrl, app.dailyUsers, previewImagesJson, videoUrlRaw, id
+      prosJson, consJson, app.badge, app.apkUrl, app.dailyUsers, previewImagesJson, videoUrlRaw,
+      keywordsJson, app.androidRequirement || '', app.developer || '', app.packageName || '',
+      app.releaseDate || '', app.withdrawSpeed || '', app.supportContact || '', id
     ]);
   } else {
     await pool.query(`
       INSERT INTO apps (
         id, name, logo, rating, downloads, apk_size, min_cashout, methods, tagline,
         detailed_review, detailed_review_urdu, pros, cons, badge, apk_url, daily_users,
-        preview_images, video_url
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        preview_images, video_url, keywords, android_requirement, developer, package_name,
+        release_date, withdraw_speed, support_contact
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
     `, [
       id, app.name, app.logo, app.rating, app.downloads, app.apkSize, app.minCashout,
       methodsJson, app.tagline, app.detailedReview, app.detailedReviewUrdu,
-      prosJson, consJson, app.badge, app.apkUrl, app.dailyUsers, previewImagesJson, videoUrlRaw
+      prosJson, consJson, app.badge, app.apkUrl, app.dailyUsers, previewImagesJson, videoUrlRaw,
+      keywordsJson, app.androidRequirement || '', app.developer || '', app.packageName || '',
+      app.releaseDate || '', app.withdrawSpeed || '', app.supportContact || ''
     ]);
   }
   return findAppById(id);

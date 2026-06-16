@@ -18,6 +18,13 @@ export interface AppReview {
   previewImages?: string[];
   videoUrl?: string;
   clicks?: number;
+  keywords?: string[];
+  androidRequirement?: string;
+  developer?: string;
+  packageName?: string;
+  releaseDate?: string;
+  withdrawSpeed?: string;
+  supportContact?: string;
 }
 
 export interface WithdrawalNotification {
