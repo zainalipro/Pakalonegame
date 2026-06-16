@@ -842,13 +842,15 @@ export default function App() {
             </p>
             
             <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] font-bold text-slate-400">
-              <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
               <span>•</span>
-              <span className="hover:text-white transition-colors cursor-pointer">Disclaimer</span>
+              <Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
               <span>•</span>
-              <span className="hover:text-white transition-colors cursor-pointer">About Us</span>
+              <Link to="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link>
               <span>•</span>
-              <span className="hover:text-white transition-colors cursor-pointer">Contact Us</span>
+              <Link to="/about-us" className="hover:text-white transition-colors">About Us</Link>
+              <span>•</span>
+              <Link to="/contact-us" className="hover:text-white transition-colors">Contact Us</Link>
             </div>
           </div>
 

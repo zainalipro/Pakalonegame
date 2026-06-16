@@ -764,9 +764,28 @@ export default function GameDetailPage() {
       </div>
 
       {/* Footer back to app index */}
-      <footer className="bg-white border-t border-slate-100 py-8 text-center text-xs text-slate-500 font-medium">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 Pakalone Games. All Rights Vetted and Verified.</p>
+      <footer className="bg-[#12161f] text-slate-400 border-t border-slate-850 py-10 text-center text-xs font-medium relative mt-12">
+        <div className="max-w-5xl mx-auto px-4 space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4.5 pb-6 border-b border-slate-800 text-left">
+            <p className="text-slate-350 text-[11px] font-bold">
+              © 2026 Pakalone Games. All Rights Vetted and Verified. Not affiliated with Google or Playstore.
+            </p>
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] font-bold text-slate-400">
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              <span>•</span>
+              <Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
+              <span>•</span>
+              <Link to="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link>
+              <span>•</span>
+              <Link to="/about-us" className="hover:text-white transition-colors">About Us</Link>
+              <span>•</span>
+              <Link to="/contact-us" className="hover:text-white transition-colors">Contact Us</Link>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-500 max-w-xl text-left font-sans">
+            Disclaimer: The games listed on this platform correspond to third-party digital entertainment software. Earning apps are subject to financial volatility. Users should act according to local juridical boundaries. We prioritize safe testing of mirrors.
+          </p>
         </div>
       </footer>
 

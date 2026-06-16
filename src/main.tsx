@@ -4,7 +4,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App.tsx';
 import AdminDashboard from './AdminDashboard.tsx';
 import GameDetailPage from './GameDetailPage.tsx';
-import { reinitializeSupabase } from './supabase.ts';
+import {reinitializeSupabase} from './supabase.ts';
+import PrivacyPolicy from './PrivacyPolicy.tsx';
+import TermsOfService from './TermsOfService.tsx';
+import Disclaimer from './Disclaimer.tsx';
+import AboutUs from './AboutUs.tsx';
+import ContactUs from './ContactUs.tsx';
 import './index.css';
 
 // Lightweight page for popup callback
@@ -57,6 +62,14 @@ async function bootstrapAndRender() {
           <Route path="/" element={<App />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/game/:id" element={<GameDetailPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/auth/supabase-callback" element={<SupabaseCallbackPage />} />
         </Routes>
       </BrowserRouter>
