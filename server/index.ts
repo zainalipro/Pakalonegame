@@ -898,7 +898,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
   } else {
     // Note: express ^4.x uses '*', express ^5.x uses '*all'
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, { index: false }));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
