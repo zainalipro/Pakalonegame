@@ -829,6 +829,47 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     }
   });
 
+  // Dynamic XML Sitemap Endpoint for Search Engine Crawler discovery (Google, Bing)
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const apps = await fetchAllApps();
+      const baseUrl = "https://pakalone.online";
+      
+      let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+      
+      // Main Landing Page
+      sitemap += `  <url>\n`;
+      sitemap += `    <loc>${baseUrl}/</loc>\n`;
+      sitemap += `    <changefreq>daily</changefreq>\n`;
+      sitemap += `    <priority>1.0</priority>\n`;
+      sitemap += `  </url>\n`;
+      
+      // Direct high-fidelity verified game routes returned dynamically
+      if (Array.isArray(apps)) {
+        apps.forEach((appItem: any) => {
+          if (appItem && appItem.id) {
+            sitemap += `  <url>\n`;
+            sitemap += `    <loc>${baseUrl}/game/${appItem.id}</loc>\n`;
+            sitemap += `    <changefreq>weekly</changefreq>\n`;
+            sitemap += `    <priority>0.8</priority>\n`;
+            sitemap += `  </url>\n`;
+          }
+        });
+      }
+      
+      sitemap += `</urlset>\n`;
+      
+      res.header("Content-Type", "application/xml");
+      res.send(sitemap);
+    } catch (error) {
+      console.error("Failed to dynamically compile sitemap.xml:", error);
+      // Fallback response inside safety loop
+      res.header("Content-Type", "application/xml");
+      res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<url><loc>https://pakalone.online/</loc><priority>1.0</priority></url>\n</urlset>`);
+    }
+  });
+
   // High-fidelity server-side Dynamic SEO metadata injector for root homepage
   app.get(["/", "/index.html"], async (req, res, next) => {
     try {
