@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Download, Search, Star, ShieldCheck, Check, Smartphone, ArrowRight, Sliders,
-  Facebook, Send, MessageCircle, ArrowUp, Menu, Flame, Trophy, Award, Moon, Sun, Sparkles
+  Facebook, Send, MessageCircle, ArrowUp, Menu, Flame, Trophy, Award, Moon, Sun, Sparkles, Share2, Copy
 } from 'lucide-react';
 import { AppReview } from './types';
 import { applyTheme } from './theme';
@@ -38,6 +38,40 @@ export default function App() {
   const [activeThemeId, setActiveThemeId] = useState('saas-light');
   const [showAdminSecret, setShowAdminSecret] = useState(false);
   const [portalLogo, setPortalLogo] = useState('/logo.svg');
+
+  const [copiedAppId, setCopiedAppId] = useState<string | null>(null);
+  const [sharedAppId, setSharedAppId] = useState<string | null>(null);
+
+  const handleCopyLink = (appId: string) => {
+    const pageUrl = `${window.location.origin}/game/${appId}`;
+    navigator.clipboard.writeText(pageUrl)
+      .then(() => {
+        setCopiedAppId(appId);
+        setTimeout(() => setCopiedAppId(null), 2000);
+      })
+      .catch((err) => console.error("Clipboard write fail:", err));
+  };
+
+  const handleShareGame = (app: AppReview) => {
+    const pageUrl = `${window.location.origin}/game/${app.id}`;
+    const shareData = {
+      title: `${app.name} - PakAlone Online PKR Earning`,
+      text: `Get the verified ${app.name} APK from PakAlone and start earning cash with EasyPaisa/JazzCash!`,
+      url: pageUrl
+    };
+
+    if (navigator.share) {
+      navigator.share(shareData)
+        .catch((err) => console.log("Sharing failed or canceled", err));
+    } else {
+      navigator.clipboard.writeText(pageUrl)
+        .then(() => {
+          setSharedAppId(app.id);
+          setTimeout(() => setSharedAppId(null), 3000);
+        })
+        .catch((err) => console.error("Clipboard share write fail:", err));
+    }
+  };
 
   const toggleTheme = () => {
     let nextTheme = 'saas-light';
@@ -464,22 +498,43 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                     <Link 
                       to={`/game/${app.id}`}
-                      className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200.5 font-extrabold text-xs rounded-xl transition"
+                      className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-205 font-extrabold text-xs rounded-xl transition"
                     >
                       Verify Info
                     </Link>
                     <a 
                       href={app.apkUrl} 
+                      onClick={() => fetch(`/api/apps/${app.id}/click`, { method: 'POST' }).catch(() => {})}
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-[#0d3a8e] hover:bg-blue-800 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center gap-1 transition"
+                      className="px-4 py-2.5 bg-[#0d3a8e] hover:bg-blue-800 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center gap-1 transition"
                     >
                       <Download className="h-3.5 w-3.5" />
                       <span>Download</span>
                     </a>
+                    
+                    <button
+                      onClick={() => handleCopyLink(app.id)}
+                      className="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-xl transition cursor-pointer"
+                      title="Copy Game Link"
+                    >
+                      {copiedAppId === app.id ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleShareGame(app)}
+                      className="p-2.5 bg-blue-50/50 hover:bg-blue-50 text-[#0d3a8e] border border-blue-100 rounded-xl transition cursor-pointer"
+                      title="Share Game"
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 </div>
               ))}
@@ -588,6 +643,28 @@ export default function App() {
                 className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden relative group text-left"
                 id={`app-card-${app.id}`}
               >
+                {/* Float Quick Share Actions on Top Right */}
+                <div className="absolute top-3 right-3 z-20 flex items-center gap-1">
+                  <button
+                    onClick={() => handleCopyLink(app.id)}
+                    className="p-1.5 bg-slate-50/90 hover:bg-white text-slate-600 hover:text-[#0d3a8e] shadow-xs border border-slate-200 rounded-lg transition-all cursor-pointer"
+                    title={copiedAppId === app.id ? "Copied!" : "Copy URL Link"}
+                  >
+                    {copiedAppId === app.id ? (
+                      <Check className="h-3 w-3 text-emerald-600 font-bold" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handleShareGame(app)}
+                    className="p-1.5 bg-slate-50/90 hover:bg-white text-slate-600 hover:text-[#0d3a8e] shadow-xs border border-slate-200 rounded-lg transition-all cursor-pointer"
+                    title="Share Game"
+                  >
+                    <Share2 className="h-3 w-3" />
+                  </button>
+                </div>
+
                 {/* Diagonal Green corner ribbon banner */}
                 <div className="absolute top-0 left-0 overflow-hidden w-20 h-20 pointer-events-none z-10">
                   <div className="absolute top-3 -left-7 bg-[#10b981] text-white text-[8px] font-black tracking-wider py-0.5 w-24 text-center transform -rotate-45 shadow-sm uppercase">
@@ -661,6 +738,9 @@ export default function App() {
                   </Link>
                   <a 
                     href={app.apkUrl} 
+                    onClick={() => {
+                      fetch(`/api/apps/${app.id}/click`, { method: 'POST' }).catch(() => {});
+                    }}
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex-1 py-2.5 text-center bg-[#0d3a8e] hover:bg-blue-800 text-white rounded-xl text-2xs font-black tracking-wider transition uppercase shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"

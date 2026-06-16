@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabase';
 import { AppReview } from './types';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShieldAlert, Plus, Trash2, Edit, LogOut, Loader2, Save, X, Smartphone, CheckCircle2, AlertCircle, Sparkles, Mail, Send, Users, Settings, Calendar, Share2 } from 'lucide-react';
+import { ShieldAlert, Plus, Trash2, Edit, LogOut, Loader2, Save, X, Smartphone, CheckCircle2, AlertCircle, Sparkles, Mail, Send, Users, Settings, Calendar, Share2, MousePointerClick } from 'lucide-react';
 import { applyTheme } from './theme';
 
 export default function AdminDashboard() {
@@ -1338,7 +1338,13 @@ export default function AdminDashboard() {
                                </div>
                                <div>
                                   <h3 className="font-bold text-white text-base leading-tight mt-1">{app.name}</h3>
-                                  <span className="text-[10px] text-gold-400 font-mono tracking-wider">{app.badge || 'NO BADGE'}</span>
+                                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span className="text-[10px] text-gold-400 font-mono tracking-wider">{app.badge || 'NO BADGE'}</span>
+                                    <span className="text-zinc-700 text-[10px]">|</span>
+                                    <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/10">
+                                       <MousePointerClick className="h-3 w-3 inline" /> {app.clicks || 0} clicks
+                                    </span>
+                                  </div>
                                </div>
                             </div>
                          </div>

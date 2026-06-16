@@ -529,9 +529,10 @@ export async function initDb() {
         );
       `);
 
-      // Dynamically alter table to add columns for preview images and video URLs
+      // Dynamically alter table to add columns for preview images, video URLs, and clicks tracking
       await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS preview_images JSONB DEFAULT '[]'::jsonb`);
       await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS video_url TEXT`);
+      await client.query(`ALTER TABLE apps ADD COLUMN IF NOT EXISTS clicks INT DEFAULT 0`);
 
       await client.query(`
         CREATE TABLE IF NOT EXISTS admin_settings (
@@ -652,7 +653,8 @@ function mapRowToAppReview(row: any): any {
     dailyUsers: row.daily_users,
     createdAt: row.created_at,
     previewImages: typeof row.preview_images === 'string' ? JSON.parse(row.preview_images) : (row.preview_images || []),
-    videoUrl: row.video_url || ''
+    videoUrl: row.video_url || '',
+    clicks: parseInt(row.clicks) || 0
   };
 }
 
@@ -685,6 +687,7 @@ export async function fetchAllApps() {
             cons: data.cons || [],
             previewImages: data.previewImages || [],
             videoUrl: data.videoUrl || '',
+            clicks: data.clicks || 0,
             createdAt: data.createdAt ? new Date(data.createdAt) : new Date()
           });
         });
@@ -742,6 +745,7 @@ export async function findAppById(id: string) {
             cons: data.cons || [],
             previewImages: data.previewImages || [],
             videoUrl: data.videoUrl || '',
+            clicks: data.clicks || 0,
             createdAt: data.createdAt ? new Date(data.createdAt) : new Date()
           };
         }
@@ -814,6 +818,7 @@ export async function saveAppReview(id: string, app: any) {
       dailyUsers: app.dailyUsers,
       previewImages: app.previewImages || [],
       videoUrl: app.videoUrl || '',
+      clicks: app.clicks || 0,
       createdAt: new Date()
     };
     if (existingIndex >= 0) {
@@ -871,6 +876,48 @@ export async function saveAppReview(id: string, app: any) {
     ]);
   }
   return findAppById(id);
+}
+
+export async function incrementAppClicks(id: string) {
+  const provider = getActiveDbProvider();
+  if (provider === 'firebase') {
+    const firestore = getFirebaseFirestore();
+    if (firestore) {
+      try {
+        const docRef = doc(firestore, 'apps', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const currentClicks = docSnap.data().clicks || 0;
+          await setDoc(docRef, { clicks: currentClicks + 1 }, { merge: true });
+          return currentClicks + 1;
+        }
+      } catch (e) {
+        console.error("Firebase incrementAppClicks failed:", e);
+      }
+    }
+  }
+
+  if (useMemoryDb) {
+    const app = memoryApps.find(a => a.id === id);
+    if (app) {
+      app.clicks = (app.clicks || 0) + 1;
+      return app.clicks;
+    }
+    return 0;
+  }
+
+  try {
+    const res = await pool.query(
+      'UPDATE apps SET clicks = COALESCE(clicks, 0) + 1 WHERE id = $1 RETURNING clicks',
+      [id]
+    );
+    if (res.rows.length > 0) {
+      return parseInt(res.rows[0].clicks) || 0;
+    }
+  } catch (err) {
+    console.error("Postgres incrementAppClicks failed:", err);
+  }
+  return 0;
 }
 
 export async function removeAppReview(id: string) {

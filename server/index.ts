@@ -20,7 +20,8 @@ import {
   fetchAdminSettings, saveAdminSettings, addSubscriber, fetchSubscribers,
   removeSubscriber, submitUserMessage, fetchUserMessages,
   getLocalAdmins, saveLocalAdmins, loadSupabaseConfig, updateDatabasePool, getUseMemoryDb,
-  getActiveDbProvider, saveActiveDbProvider, fetchUserReviewsForApp, submitUserReview
+  getActiveDbProvider, saveActiveDbProvider, fetchUserReviewsForApp, submitUserReview,
+  incrementAppClicks
 } from "./db";
 
 // Helper to extract Cloudflare & reverse proxy client request features correctly
@@ -259,6 +260,16 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     } catch (error: any) {
       console.error("Save app failed:", error);
       res.status(500).json({ error: error.message || "Failed to save app change." });
+    }
+  });
+
+  app.post("/api/apps/:id/click", async (req, res) => {
+    try {
+      const count = await incrementAppClicks(req.params.id);
+      res.json({ success: true, clicks: count });
+    } catch (error: any) {
+      console.error("Increment click failed:", error);
+      res.status(500).json({ error: "Failed to record click metric." });
     }
   });
 

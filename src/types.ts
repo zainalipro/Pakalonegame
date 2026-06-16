@@ -17,6 +17,7 @@ export interface AppReview {
   dailyUsers: string;
   previewImages?: string[];
   videoUrl?: string;
+  clicks?: number;
 }
 
 export interface WithdrawalNotification {
