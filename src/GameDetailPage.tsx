@@ -189,7 +189,7 @@ export default function GameDetailPage() {
         keywordsMeta.setAttribute('content', `${app.name}, ${app.name} APK, ${app.name} app download, ${app.name} download Pakistan, game download karo, paise kamao, free download APK Pakistan, online earning games Pakistan, pakalone`);
       }
     } else {
-      document.title = "Pakalone - #1 Trusted Verified Earning Apps & Gaming APKs Pakistan";
+      document.title = "PakAlone - Pakistan Online Casino Slots & Earning Games";
     }
   }, [app]);
 
@@ -279,10 +279,16 @@ export default function GameDetailPage() {
       {/* Top Navigation Row */}
       <div className="bg-[var(--theme-header-bg)] border-b border-[var(--theme-border)] shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="inline-flex items-center gap-2 text-[var(--theme-text-muted)] hover:text-amber-500 font-bold transition text-sm">
-            <ArrowLeft className="h-4 w-4" />
-            <span>Back to All Games</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="inline-flex items-center gap-2 text-[var(--theme-text-muted)] hover:text-amber-500 font-bold transition text-sm">
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Games</span>
+            </Link>
+            <span className="text-[var(--theme-border)] text-sm">|</span>
+            <Link to="/" className="flex items-center">
+              <img src="/logo.svg" alt="PakAlone Games Logo" className="h-8 w-auto object-contain max-w-[140px]" />
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             {/* Elegant Dark/Light Mode Loop Trigger */}
             <button

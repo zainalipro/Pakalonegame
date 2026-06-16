@@ -39,7 +39,7 @@ export default function AdminDashboard() {
     smtp_port: '587',
     smtp_secure: 'false',
     smtp_user: 'pakalone.online@gmail.com',
-    smtp_pass: '',
+    smtp_pass: 'bacutoidaqscmsoh',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     community_facebook: '',
     community_twitter: '',
@@ -276,7 +276,7 @@ export default function AdminDashboard() {
           smtp_port: '587',
           smtp_secure: 'false',
           smtp_user: 'pakalone.online@gmail.com',
-          smtp_pass: '',
+          smtp_pass: 'bacutoidaqscmsoh',
           smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
           community_facebook: '',
           community_twitter: '',
@@ -621,9 +621,10 @@ export default function AdminDashboard() {
       smtp_port: '587',
       smtp_secure: 'false',
       smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
-      smtp_user: 'pakalone.online@gmail.com'
+      smtp_user: 'pakalone.online@gmail.com',
+      smtp_pass: 'bacutoidaqscmsoh'
     }));
-    showToast('Applied Pak Alone Gmail preset (Port 587 TLS). Enter your App Password! 💡');
+    showToast('Applied Pak Alone Gmail preset (Port 587 TLS with App Password). Verified! 💡');
   };
 
   const handleSendTestEmail = async (e: FormEvent) => {

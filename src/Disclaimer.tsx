@@ -15,18 +15,14 @@ export default function Disclaimer() {
       {/* Top navbar bar */}
       <div className="bg-gradient-to-r from-[#0d3a8e] to-[#0c4cbd] text-white shadow-md">
         <header className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center justify-center">
-              <ArrowLeft className="h-5 w-5 text-white" />
+          <div className="flex items-center gap-3 bg-zinc-950/20 px-3 py-1.5 rounded-2xl border border-white/10 shadow-sm backdrop-blur-3xs">
+            <Link to="/" className="p-1.5 hover:bg-white/15 rounded-xl transition-colors flex items-center justify-center">
+              <ArrowLeft className="h-4.5 w-4.5 text-white" />
             </Link>
-            <div className="text-left">
-              <h1 className="font-display text-lg font-black text-white tracking-tight uppercase leading-none">
-                Pakalone Legal Hub
-              </h1>
-              <p className="text-[9px] font-bold text-yellow-300 tracking-wide mt-1 uppercase font-mono">
-                Risk & Compliance Department
-              </p>
-            </div>
+            <span className="text-white/30 text-xs">|</span>
+            <Link to="/" className="flex items-center">
+              <img src="/logo.svg" alt="PakAlone Logo" className="h-[34px] w-auto object-contain max-w-[130px]" />
+            </Link>
           </div>
           <span className="inline-flex items-center gap-1 bg-[#082a69] border border-blue-500/30 rounded-full px-3 py-1 text-[10px] font-bold text-yellow-300">
             <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />

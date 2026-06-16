@@ -142,7 +142,7 @@ export default function App() {
 
   // Reset standard homepage headers when returning from direct game detail pages to ensure correct index visibility
   useEffect(() => {
-    document.title = "Pakalone - #1 Trusted Verified Earning Apps & Gaming APKs Pakistan";
+    document.title = "PakAlone - Pakistan Online Casino Slots & Earning Games";
     
     const descMeta = document.querySelector('meta[name="description"]');
     if (descMeta) {
