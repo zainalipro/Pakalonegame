@@ -206,90 +206,239 @@ let memorySettings: Record<string, string> = {
 export function getSeedApps(): any[] {
   return [
     {
-      id: "s9-game",
-      name: "S9 Game",
-      logo: "🎰",
-      rating: 4.8,
-      downloads: "500K+",
-      apkSize: "35 MB",
-      minCashout: "Rs. 200",
+      id: "mmy-app",
+      name: "MMY App",
+      logo: "🏆",
+      rating: 4.9,
+      downloads: "650K+",
+      apkSize: "26 MB",
+      minCashout: "Rs. 100",
       methods: ["EasyPaisa", "JazzCash"],
-      tagline: "Pakistan's #1 Trusted Cards & Instant EasyPaisa Payout Platform",
-      detailedReview: "S9 Game (Super 9) is currently the leading real-money earning portal in Pakistan. Vetted for security and consistency, this stable gaming APK offers an optimized direct connection to EasyPaisa and JazzCash withdrawals. Players can enjoy traditional slot machines, classic cards, and lucky roulette dials with guaranteed low latency and daily check-in rewards. Its 24/7 client support keeps withdrawal pipes smooth for PKR players. Regular events and transparent multiplier rules make it highly recommended for users seeking vetted online entertainment with instant checkouts.",
-      detailedReviewUrdu: "ایس نائن گیم (S9 Game) اس وقت پاکستان میں سب سے زیادہ مقبول اور قابلِ اعتماد ارننگ گیم ہے۔ یہ ایپ تیز اور محفوظ ایزی پیسہ اور جاز کیش کیش آؤٹ کی خصوصیات پیش کرتی ہے۔ صارفین سلیش سلاٹس، لکی رولیٹی، اور کلاسک کارڈ گیمز کھیل کر حقیقی آمدنی کما سکتے ہیں۔ چوبیس گھنٹے فعال کسٹمر سروس اور روزانہ فری بونسز صارفین کے اعتماد کو مزید مضبوط بناتے ہیں۔",
+      tagline: "MMY App Official Download - Earn Real Money & Gold Coins in Pakistan",
+      detailedReview: "MMY App (Official) is Pakistan's most trending mobile gaming platform and real money earning portal. Known for secure game rooms, fast multiplayer slot structures, and instant EasyPaisa or JazzCash direct payout links, MMY App has seen exponential growth. Grab the authentic secure mirror APK here to enjoy risk-free cashout rooms, and leverage direct 24/7 Support in Pakistan. Safe multipliers, daily bonuses, and fair game logs make it the absolute number one selection for fast PKR payout games.",
+      detailedReviewUrdu: "ایم ایم وائی ایپ (MMY App) پاکستان میں گیم کھیلنے اور پیسے کمانے کی سب سے مقبول ایپ بن چکی ہے۔ اس ایپ کی مدد سے آپ تاش کے کلاسک کھیل، اسپنر اور سلاٹس کے لائیو راؤنڈ کھیل سکتے ہیں اور اپنی جیتی ہوئی رقم کو سیکنڈز میں ایزی پیسہ اور جاز کیش اکاؤنٹ میں حاصل کر سکتے ہیں۔",
       pros: [
-        "Direct checkout to JazzCash & EasyPaisa without delays",
-        "Optimized low latency for all entry networks in Pakistan",
-        "Very low minimum withdrawal and high multiplying factor"
+        "Extra fast withdrawals to EasyPaisa & JazzCash",
+        "Very light file size of only 26 MB, perfect for every mobile",
+        "Rs. 100 lowest cashout threshold with daily zero-investment rewards"
       ],
       cons: [
-        "Not yet available on official Google Play Store",
-        "Moderate battery consumption on old Android phones"
+        "Requires constant active internet connection to execute slots",
+        "High processing sounds that may need to be muted manually in settings"
       ],
       badge: "MOST POPULAR",
-      apkUrl: "https://pakalone.online/downloads/s9game.apk",
-      dailyUsers: "15,000+",
+      apkUrl: "https://pakalone.online/downloads/mmy-app.apk",
+      dailyUsers: "25,000+",
       previewImages: [
-        "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=80",
-        "https://images.unsplash.com/photo-1541252260730-0412e8e2108e?w=500&q=80"
+        "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=80"
       ],
       videoUrl: "",
       createdAt: new Date().toISOString()
     },
     {
-      id: "three-patti-lucky",
-      name: "Three Patti Lucky",
-      logo: "🃏",
-      rating: 4.7,
-      downloads: "200K+",
-      apkSize: "28 MB",
-      minCashout: "Rs. 100",
-      methods: ["EasyPaisa", "JazzCash"],
-      tagline: "Highest Multipliers on Traditional Slots and Card Tables in Pakistan",
-      detailedReview: "Three Patti Lucky is a magnificent card game simulator perfectly fine-tuned for Pakistani cellular bandwidths. Integrating safe payout portals, this lightweight APK includes robust multiplier rounds on local slot tables. With round-the-clock security configurations, the portal establishes absolute transaction consistency. Download the official, updated secure mirror APK node to access exclusive cashout rooms with low entry barriers.",
-      detailedReviewUrdu: "تھری پتی لکی کارڈ گیمز کے شائقین کے لیے ایک بہترین پلیٹ فارم ہے جس میں ایزی پیسہ اور جاز کیش کے ذریعے فوری ادائیگیاں حاصل کی جا سکتی ہیں۔ لائیو سپورٹ، شاندار گرافکس اور منصفانہ کھیل اس گیم کو ممتاز بناتے ہیں۔",
+      id: "cx777",
+      name: "CX777",
+      logo: "💎",
+      rating: 4.8,
+      downloads: "400K+",
+      apkSize: "32 MB",
+      minCashout: "Rs. 150",
+      methods: ["EasyPaisa", "JazzCash", "Bank Transfer"],
+      tagline: "CX777 APK Official Download - High Multipliers Casino Slots in Pakistan",
+      detailedReview: "CX777 Game is a masterfully created casino slot and card platform featuring premium multiplier tables and safe, verified EasyPaisa withdrawal pipelines. The APK has been thoroughly audited for fair RNG logs, ensuring a transparent environment. Download the verified, latest secure mirror APK node to unlock daily rewards, multiplayer lobbies, and 24/7 dedicated support.",
+      detailedReviewUrdu: "سی ایکس 777 (CX777 Game) تاش اور سنسنی خیز سلاٹس گیمز کے شائقین کے لیے ایک زبردست پورٹل ہے جو فوری ادائیگیوں کی ضمانت دیتا ہے۔ اس میں روزانہ کی بنیاد پر بونس اور ملٹی پلیئر گیمز کے شاندار مقابلے منعقد ہوتے ہیں۔",
       pros: [
-        "Ultra-lightweight 28 MB installation file size",
-        "Instant Rs. 100 withdrawal minimum limit",
-        "Daily login bonuses and lucky mystery scratchcards"
+        "Verified RNG certifications with transparent fair multipliers",
+        "Supports Bank Transfers alongside JazzCash and EasyPaisa",
+        "Super responsive 24/7 user support helpline"
       ],
       cons: [
-        "Interface has background audio that must be muted manually",
-        "Requires active internet connection at all times to execute slots"
+        "Not available on Google Play store, requires setting manual install permissions",
+        "Includes premium animations that might consume battery on old devices"
       ],
-      badge: "TRUSTED",
-      apkUrl: "https://pakalone.online/downloads/three-patti-lucky.apk",
-      dailyUsers: "8,500+",
+      badge: "HOT APP",
+      apkUrl: "https://pakalone.online/downloads/cx777.apk",
+      dailyUsers: "18,000+",
+      previewImages: [
+        "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80"
+      ],
+      videoUrl: "",
+      createdAt: new Date(Date.now() - 100000).toISOString()
+    },
+    {
+      id: "92bar",
+      name: "92BAR",
+      logo: "🎰",
+      rating: 4.7,
+      downloads: "300K+",
+      apkSize: "29 MB",
+      minCashout: "Rs. 200",
+      methods: ["EasyPaisa", "JazzCash"],
+      tagline: "92BAR APK Download - Pakistan's Top Cards & Online Slots Companion",
+      detailedReview: "92BAR has taken the Pakistani real-money arcade space by storm. Incorporating optimized low-latency multiplayer game rooms, this lightweight APK runs beautifully even on low-tier smartphones. Download the latest verified mirror release here to get extra sign-up bonuses and smooth transactional execution.",
+      detailedReviewUrdu: "92BAR پاکستان میں ریئل ارننگ گیمز کے میدان میں ایک نیا اور جدید پلیٹ فارم ہے جس میں تیز رفتار کنیکٹیویٹی اور آسان کیش آؤٹ کی خدمات پیش کی گئی ہیں۔",
+      pros: [
+        "Works smoothly on slow 3G or 4G data connections",
+        "Attractive localized interface with friendly navigation",
+        "Regular rewards multipliers on slots and card rounds"
+      ],
+      cons: [
+        "Limited to 2 local mobile wallet payout options",
+        "Sign-up requires accurate local mobile number Verification SMS"
+      ],
+      badge: "VETTED",
+      apkUrl: "https://pakalone.online/downloads/92bar.apk",
+      dailyUsers: "12,000+",
       previewImages: [
         "https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=500&q=80"
       ],
       videoUrl: "",
-      createdAt: new Date(Date.now() - 3600000).toISOString()
+      createdAt: new Date(Date.now() - 200000).toISOString()
+    },
+    {
+      id: "jeeto786",
+      name: "Jeeto786",
+      logo: "🔥",
+      rating: 4.9,
+      downloads: "550K+",
+      apkSize: "34 MB",
+      minCashout: "Rs. 100",
+      methods: ["EasyPaisa", "JazzCash", "Bank Transfer"],
+      tagline: "Jeeto786 App Download Pakistan - Online Earning Play & Earn Hub",
+      detailedReview: "Jeeto786 is a premier Pakistani online earning game designed with local players in mind. Featuring a low Rs. 100 withdrawal limit and instant processing times, it represents a highly trusted solution. With multi-layered SSL transaction shields, players can confidently download the APK to experience high-multiplier luck wheels, scratchcards, and card boards.",
+      detailedReviewUrdu: "جیتو 786 (Jeeto786) پاکستان کا ایک مایہ ناز ارننگ پورٹل ہے جس کا مقصد کم سے کم منافع کو بھی سیکنڈز میں آپ تک پہنچانا ہے۔ اس میں لکی وہیل اور آسان انعامی گیمز موجود ہیں۔",
+      pros: [
+        "Highly localized support and Urdu operational guidelines",
+        "Guaranteed instant processing of EasyPaisa payout batches",
+        "Lucrative rewards program and multi-tiered referral schemes"
+      ],
+      cons: [
+        "Daily withdrawal limit is set at Rs. 50,000 for standard accounts",
+        "Frequent minor cosmetic updates that require quick APK repatches"
+      ],
+      badge: "RECOMMENDED",
+      apkUrl: "https://pakalone.online/downloads/jeeto786.apk",
+      dailyUsers: "22,000+",
+      previewImages: [
+        "https://images.unsplash.com/photo-1541252260730-0412e8e2108e?w=500&q=80"
+      ],
+      videoUrl: "",
+      createdAt: new Date(Date.now() - 300000).toISOString()
+    },
+    {
+      id: "isb15",
+      name: "ISB15",
+      logo: "💚",
+      rating: 4.6,
+      downloads: "150K+",
+      apkSize: "27 MB",
+      minCashout: "Rs. 120",
+      methods: ["EasyPaisa", "JazzCash"],
+      tagline: "ISB15 APK Download - High Payout Slots & Traditional Card Games",
+      detailedReview: "ISB15 represents a lightweight, high-performance Pakistani gaming app optimized strictly for direct JazzCash and EasyPaisa withdrawal routes. Boasting traditional local gaming setups, ISB15 is perfect for fans of casual spinner slots and luck cards seeking clean UI and instant transaction confirmations.",
+      detailedReviewUrdu: "آئی ایس بی 15 (ISB15) ایک بلکیٹ اور تیز ترین سلاٹس گیم ہے جس کو خاص طور پر پاکستانی موبائل والٹس کے مطابق ڈیزائن کیا گیا ہے تاکہ فوری ادائیگیوں میں کوئی رکاوٹ پیش نہ آئے۔",
+      pros: [
+        "Saves battery footprint significantly with flat design assets",
+        "Minimum checkout limit of only Rs. 120 to decrease barrier of entry",
+        "Instant registration via Guest Login or verified mobile number OTP"
+      ],
+      cons: [
+        "Does not offer international payment mechanisms",
+        "Lacks automatic audio level tuning on older operating systems"
+      ],
+      badge: "FAST PAYOUT",
+      apkUrl: "https://pakalone.online/downloads/isb15.apk",
+      dailyUsers: "7,000+",
+      previewImages: [
+        "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80"
+      ],
+      videoUrl: "",
+      createdAt: new Date(Date.now() - 400000).toISOString()
+    },
+    {
+      id: "isb19",
+      name: "ISB19",
+      logo: "⭐",
+      rating: 4.7,
+      downloads: "180K+",
+      apkSize: "30 MB",
+      minCashout: "Rs. 150",
+      methods: ["EasyPaisa", "JazzCash", "Bank Transfer"],
+      tagline: "ISB19 App Download - Official Verified Arcade & Slots Pakistan",
+      detailedReview: "ISB19 Game provides a premium, safe multiplayer arena highlighting certified card rooms and high-multiplier spinning slots. With comprehensive round-the-clock manual and automated audits, it guarantees a fully secure payout system directly tied into the top Pakistani banking networks and mobile apps.",
+      detailedReviewUrdu: "آئی ایس بی 19 (ISB19) پاکستان میں ایک اعلیٰ درجہ کاSlots گیم ہے جو کھلاڑیوں کو شفاف ماحول اور محفوظ ترین ٹرانزیکشن سیکیورٹی فراہم کرتا ہے۔",
+      pros: [
+        "Double-layer encryption to fully protect transaction databases",
+        "Includes high-definition game room assets with immersive audio",
+        "Excellent VIP program tiers for verified regular players"
+      ],
+      cons: [
+        "Larger download footprint when full resources are loaded inside the app",
+        "Customer representative queue can take up to 3 minutes during evening peak times"
+      ],
+      badge: "SECURE",
+      apkUrl: "https://pakalone.online/downloads/isb19.apk",
+      dailyUsers: "9,000+",
+      previewImages: [
+        "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500&q=80"
+      ],
+      videoUrl: "",
+      createdAt: new Date(Date.now() - 500000).toISOString()
+    },
+    {
+      id: "sk-m777",
+      name: "SK-M777",
+      logo: "⚡",
+      rating: 4.8,
+      downloads: "250K+",
+      apkSize: "28 MB",
+      minCashout: "Rs. 100",
+      methods: ["EasyPaisa", "JazzCash"],
+      tagline: "SK-M777 App APK Download - Online Casino Slots Pakistan",
+      detailedReview: "SK-M777 App represents an exceptional real money earning portal loaded with classic card tables, Vegas spinner screens, and rapid PKR payout integration. Perfectly customized to use less mobile data, SK-M777 is highly recommended for mobile players across all major cities in Pakistan looking for low latency, secure logins, and daily rewards.",
+      detailedReviewUrdu: "ایس کے ایم 777 (SK-M777) ایک جدید اور کم ڈیٹا استعمال کرنے والی تاش اور سلاٹ گیم ایپ ہے جو روزانہ لاگ ان بونسز اور فوری ایزی پیسہ واپسی کی خصوصیات رکھتی ہے۔",
+      pros: [
+        "Saves precious mobile internet bandwidth by rendering light texture files",
+        "Significantly fast loading speeds on every single game launch",
+        "Rs. 100 minimum payout ceiling making cashouts accessible to all"
+      ],
+      cons: [
+        "Requires manual APK updates whenever a new secure mirror server is activated",
+        "Support is strictly provided in Urdu and English formats only"
+      ],
+      badge: "VETTED STAR",
+      apkUrl: "https://pakalone.online/downloads/sk-m777.apk",
+      dailyUsers: "11,500+",
+      previewImages: [
+        "https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=500&q=80"
+      ],
+      videoUrl: "",
+      createdAt: new Date(Date.now() - 600000).toISOString()
     },
     {
       id: "all-slots-777",
       name: "All Slots 777",
       logo: "💎",
       rating: 4.9,
-      downloads: "100K+",
+      downloads: "350K+",
       apkSize: "42 MB",
       minCashout: "Rs. 150",
       methods: ["EasyPaisa", "JazzCash", "Bank Transfer"],
-      tagline: "Premium Vegas-Style Slot Rooms Fine-Tuned for Direct PKR Cashouts",
-      detailedReview: "All Slots 777 transforms mobile slot gaming with its certified multiplier engine. Boasting state-of-the-art secure slots rooms, the APK features rapid cashouts to local bank modules and mobile wallets. The platform's automated audit ensures a transparent gaming environment. Grab the official agency APK today and leverage safe multipliers in trusted digital slot loops.",
-      detailedReviewUrdu: "آل سلاٹس 777 ایک پریمیم سلاٹ گیم ہے جو پاکستان میں بینک اور موبائل والٹس میں ادائیگیاں فراہم کرتا ہے۔ اس میں کثیر تعداد میں سلاٹ رومز اور کلاسک ویگاس طرز کا گیم پلے منصفانہ اور شفاف طریقے سے پیش کیا گیا ہے۔",
+      tagline: "All Slots 777 APK Official - Vegas Slot Rooms with Real PKR Cashouts",
+      detailedReview: "All Slots 777 transforms mobile slot gaming with its certified high-multiplier slot engine. Boasting state-of-the-art secure slot games, the platform serves rapid withdrawal packets directly to verified local bank accounts and telecom mobile wallets in Pakistan. Download the official Allslots777 APK to experience transparent lottery reels, slots rooms, and premium real-money casino games.",
+      detailedReviewUrdu: "آل سلاٹس 777 (All Slots 777) ایک پریمیم سلاٹ گیم ہے جو پاکستان میں بینک اور موبائل والٹس میں فوری ادائیگیاں فراہم کرتا ہے۔ اس میں کثیر تعداد میں کلاسک ویگاس طرز کا گیم پلے منصفانہ پیش کیا گیا ہے۔",
       pros: [
-        "Offers verified bank transfers alongside local telco wallets",
-        "Stately visual graphics with intuitive responsive design",
+        "Offers verified bank transfers alongside local EasyPaisa wallets",
+        "Stately visual graphics with beautiful responsive design layers",
         "Certified fair-multiplier engine with transparent audit logs"
       ],
       cons: [
-        "Slightly larger memory profile requiring 42 MB",
+        "Slightly larger memory profile requiring 42 MB size",
         "Strict account validation protocols to thwart duplicate login abuse"
       ],
       badge: "HIGHEST PAYOUT",
       apkUrl: "https://pakalone.online/downloads/allslots777.apk",
-      dailyUsers: "11,000+",
+      dailyUsers: "14,000+",
       previewImages: [
         "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80"
       ],

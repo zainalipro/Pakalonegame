@@ -175,22 +175,21 @@ export default function GameDetailPage() {
   // Synchronous client-side document title updates for seamless browser routing SEO
   useEffect(() => {
     if (app) {
-      const badgeWord = app.badge ? app.badge.toUpperCase() : 'VERIFIED';
-      document.title = `${app.name} APK Download {${badgeWord}} - Real Money Earning Portal Pakistan 2026`;
+      document.title = `${app.name} APK Download - 100% Verified Earning App Pakistan`;
       
       // Update browser meta-description elements dynamically
       const descMeta = document.querySelector('meta[name="description"]');
       if (descMeta) {
-        descMeta.setAttribute('content', `Download ${app.name} APK (${app.apkSize || 'Latest Version'}) for Androids. ${app.tagline || 'Popular instant checkout earning game in Pakistan.'} Cashout your real-money earnings instantly via ${app.methods?.join(', ') || 'Easypaisa, JazzCash'}. Rated ${app.rating}/5.`);
+        descMeta.setAttribute('content', `Download ${app.name} APK (Latest V3.2.1) for Android. ${app.tagline || ''}. Minimum withdrawal ${app.minCashout || 'Rs. 100'} via EasyPaisa and JazzCash. Game download karo aur paise kamao safely!`);
       }
 
       // Update browser keywords dynamically
       const keywordsMeta = document.querySelector('meta[name="keywords"]');
       if (keywordsMeta) {
-        keywordsMeta.setAttribute('content', `${app.name}, ${app.name} APK download, ${app.name} real money app, online earning in Pakistan, easy earning games 2026, JazzCash, Easypaisa, pakalone`);
+        keywordsMeta.setAttribute('content', `${app.name}, ${app.name} APK, ${app.name} app download, ${app.name} download Pakistan, game download karo, paise kamao, free download APK Pakistan, online earning games Pakistan, pakalone`);
       }
     } else {
-      document.title = "Pakalone - Earning Apps & Games Portal Pakistan";
+      document.title = "Pakalone - #1 Trusted Verified Earning Apps & Gaming APKs Pakistan";
     }
   }, [app]);
 

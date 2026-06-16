@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Allow: /game/
+Disallow: /admin
+Disallow: /api/
+Disallow: /dashboard
 
 Sitemap: https://pakalone.online/sitemap.xml

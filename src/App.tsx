@@ -142,16 +142,16 @@ export default function App() {
 
   // Reset standard homepage headers when returning from direct game detail pages to ensure correct index visibility
   useEffect(() => {
-    document.title = "Pakalone - Earning Apps & Games Portal Pakistan";
+    document.title = "Pakalone - #1 Trusted Verified Earning Apps & Gaming APKs Pakistan";
     
     const descMeta = document.querySelector('meta[name="description"]');
     if (descMeta) {
-      descMeta.setAttribute('content', "Pakalone is the #1 trusted directory for verified earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online.");
+      descMeta.setAttribute('content', "Welcome to Pakalone (پاک الون), the premier directory for verified online earning apps and gaming APKs in Pakistan. Free download real money games, MMY App, CX777, All Slots 777, Jeeto786, 92BAR, and fast EasyPaisa or JazzCash cashout networks. Game download karo aur paise kamao safely!");
     }
 
     const keywordsMeta = document.querySelector('meta[name="keywords"]');
     if (keywordsMeta) {
-      keywordsMeta.setAttribute('content', "Pakalone, earning apps in Pakistan, top earning games, PKR withdrawal apps, online earning Pakistan, real money games");
+      keywordsMeta.setAttribute('content', "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, ISB19, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online");
     }
   }, []);
 
