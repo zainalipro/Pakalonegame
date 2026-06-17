@@ -206,7 +206,8 @@ let memorySettings: Record<string, string> = {
   community_facebook: 'https://facebook.com',
   community_twitter: 'https://twitter.com',
   community_telegram: 'https://t.me',
-  portal_theme_mode: 'light'
+  portal_theme_mode: 'light',
+  zapier_webhook_url: 'https://hooks.zapier.com/hooks/catch/27970514/43qcl5h/'
 };
 
 // Try loading offline saved settings from filesystem cache on startup to survive container reboots
@@ -1057,7 +1058,7 @@ export async function fetchAdminSettings() {
     community_telegram: 'https://t.me',
     portal_theme_mode: 'light',
     gemini_api_key: '',
-    zapier_webhook_url: ''
+    zapier_webhook_url: 'https://hooks.zapier.com/hooks/catch/27970514/43qcl5h/'
   };
 
   if (provider === 'firebase') {

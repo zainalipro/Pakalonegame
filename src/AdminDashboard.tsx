@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     community_telegram: '',
     portal_theme_mode: 'light',
     gemini_api_key: '',
-    zapier_webhook_url: '',
+    zapier_webhook_url: 'https://hooks.zapier.com/hooks/catch/27970514/43qcl5h/',
     google_verification: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
     custom_meta_title: 'Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan',
     custom_meta_description: 'Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.',
