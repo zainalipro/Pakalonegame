@@ -296,12 +296,56 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
   });
 
   // Helper to get SMTP transporter and send email
-  async function sendEmail({ to, subject, htmlText, simulateOverride = false }: { to: string; subject: string; htmlText: string; simulateOverride?: boolean }) {
+  async function sendEmail({ to, subject, htmlText, simulateOverride = false }: { to: string; subject: string; htmlText: string; simulateOverride?: boolean }): Promise<any> {
     const settings = await fetchAdminSettings();
+
+    const zapierUrl = settings.zapier_webhook_url || process.env.ZAPIER_WEBHOOK_URL;
+    const sendViaZapier = async () => {
+      if (zapierUrl && zapierUrl.startsWith("http")) {
+        try {
+          console.log(`Forwarding email via Zapier Webhook Proxy...`);
+          const plainText = htmlText.replace(/<[^>]*>/g, '');
+          const response = await fetch(zapierUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: to,
+              subject: subject,
+              message: plainText,
+              htmlMessage: htmlText,
+              email: to,
+              timestamp: new Date().toISOString()
+            })
+          });
+          if (response.ok) {
+            console.log("✅ Custom email proxy payload routed successfully to Zapier!");
+            return {
+              success: true,
+              viaZapier: true,
+              messageId: "zapier-proxy-" + Date.now(),
+              message: "Since outbound SMTP was blocked inside the preview workspace container, your verification email was routed to Zapier instantly! ⚡ Check your Zapier integration tasks."
+            };
+          } else {
+            console.warn(`⚠️ Zapier Webhook rejected payload: ${response.status}`);
+          }
+        } catch (zapErr: any) {
+          console.error("❌ Failed to forward to Zapier:", zapErr);
+        }
+      }
+      return null;
+    };
 
     if (simulateOverride) {
       console.log(`[SIMULATED EMAIL HANDSHAKE] To: ${to}, Subject: ${subject}`);
       return { success: true, simulated: true, messageId: "simulated-msg-" + Date.now() };
+    }
+
+    // Direct instant proxy routing if Zapier is configured. Bypasses port socket restrictions instantly!
+    if (zapierUrl && zapierUrl.startsWith("http")) {
+      const zapierResult = await sendViaZapier();
+      if (zapierResult && zapierResult.success) {
+        return zapierResult;
+      }
     }
 
     if (settings.use_mailtrap === 'true') {
@@ -453,6 +497,13 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         isGcpBlocked = true;
         errorDetail += " (Connection timeout. Outbound ports 25, 465, and 587 are blocked by default in GCP Cloud Run container sandboxes. This is expected in the preview and your custom settings will run perfectly inside your Supabase project!)";
       }
+
+      // Check and fallback to Zapier Webhook proxy if configured
+      const zapierResult = await sendViaZapier();
+      if (zapierResult) {
+        return zapierResult;
+      }
+
       return { success: false, error: errorDetail, gcpBlocked: isGcpBlocked };
     }
   }

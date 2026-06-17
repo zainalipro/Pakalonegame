@@ -713,6 +713,8 @@ export default function AdminDashboard() {
         if (data.simulated) {
           setSimulatedMailContent(htmlBody);
           showToast('Sandbox mode: Credentials saved. Simulated email success! 🌟 (Preview generated below)');
+        } else if (data.viaZapier) {
+          showToast(data.message || 'SMTP bypassed on Cloud Run! Webhook relayed successfully via Zapier! ⚡');
         } else {
           showToast('Success! Verification email successfully sent. Check your inbox! 💌');
         }
