@@ -1056,7 +1056,8 @@ export async function fetchAdminSettings() {
     community_twitter: 'https://twitter.com',
     community_telegram: 'https://t.me',
     portal_theme_mode: 'light',
-    gemini_api_key: ''
+    gemini_api_key: '',
+    zapier_webhook_url: ''
   };
 
   if (provider === 'firebase') {

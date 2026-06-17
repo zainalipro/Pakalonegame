@@ -49,6 +49,7 @@ export default function AdminDashboard() {
     community_telegram: '',
     portal_theme_mode: 'light',
     gemini_api_key: '',
+    zapier_webhook_url: '',
     google_verification: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
     custom_meta_title: 'Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan',
     custom_meta_description: 'Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.',
@@ -1676,6 +1677,26 @@ export default function AdminDashboard() {
                     </div>
                   )}
                   
+                  {/* Zapier Callback Webhook Integration Input */}
+                  <div className="border-t border-zinc-800/80 pt-6 mt-4 space-y-4">
+                    <h4 className="text-zinc-200 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                       ⚡ Zapier Webhook Integration (Optional Proxy)
+                    </h4>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Zapier Catch Webhook URL</label>
+                      <input
+                        type="url"
+                        value={smtpSettings.zapier_webhook_url || ''}
+                        onChange={(e) => setSmtpSettings({ ...smtpSettings, zapier_webhook_url: e.target.value })}
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white placeholder-zinc-700"
+                        placeholder="https://hooks.zapier.com/hooks/catch/YOUR_ID/YOUR_CODE"
+                      />
+                      <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
+                        If configured, all system helpdesk/contact messages will be proxy forwarded instantly to Zapier via a server-side post payload. Your webhook keys remain fully secure and Hidden from public browser views.
+                      </p>
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
                     className="bg-gold-500 hover:bg-gold-400 text-zinc-950 font-bold py-2.5 px-6 rounded-lg text-xs tracking-wider transition cursor-pointer"

@@ -744,17 +744,47 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
           subject: `📬 New User Query: ${subject || "General Inquiry"}`,
           htmlText: `
             <div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0;">New Pakalone Query Received</h3>
-              <p><strong>Name:</strong> ${name || 'Anonymous'}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Subject:</strong> ${subject || 'None'}</p>
-              <p><strong>Origin IP:</strong> ${ip} (${country})</p>
-              <p><strong>Message:</strong></p>
-              <blockquote style="background-color: #f8fafc; padding: 15px; border-left: 4px solid #3b82f6; margin: 0; font-style: italic;">${message}</blockquote>
-              <p style="font-size: 11px; margin-top: 20px; color: #94a3b8;">Sent from user client submission portal on Pakalone Slots directory.</p>
+               <h3 style="color: #1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0;">New Pakalone Query Received</h3>
+               <p><strong>Name:</strong> ${name || 'Anonymous'}</p>
+               <p><strong>Email:</strong> ${email}</p>
+               <p><strong>Subject:</strong> ${subject || 'None'}</p>
+               <p><strong>Origin IP:</strong> ${ip} (${country})</p>
+               <p><strong>Message:</strong></p>
+               <blockquote style="background-color: #f8fafc; padding: 15px; border-left: 4px solid #3b82f6; margin: 0; font-style: italic;">${message}</blockquote>
+               <p style="font-size: 11px; margin-top: 20px; color: #94a3b8;">Sent from user client submission portal on Pakalone Slots directory.</p>
             </div>
           `
         });
+      }
+
+      // Secure Proxy Zapier Webhook trigger integration
+      const zapierUrl = settings.zapier_webhook_url || process.env.ZAPIER_WEBHOOK_URL;
+      if (zapierUrl && zapierUrl.startsWith("http")) {
+        try {
+          console.log(`Forwarding query ticket securely to Zapier Webhook...`);
+          const zapierResponse = await fetch(zapierUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              subject: subject || "General Inquiry",
+              message: message,
+              name: name || "Anonymous",
+              email: email,
+              ipAddress: ip,
+              countryCode: country,
+              timestamp: new Date().toISOString()
+            })
+          });
+          if (zapierResponse.ok) {
+            console.log("✅ Zapier Webhook payload delivered successfully!");
+          } else {
+            console.warn(`⚠️ Zapier Webhook returned status code: ${zapierResponse.status}`);
+          }
+        } catch (zapErr) {
+          console.error("❌ Failed to forward to Zapier Webhook:", zapErr);
+        }
       }
 
       res.json({ success: true, message: "Your message has been submitted and saved successfully!" });
