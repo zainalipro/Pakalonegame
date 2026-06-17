@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
-  ArrowLeft, Download, Star, ShieldCheck, Check, Smartphone, Sparkles, Mail, Send, AlertCircle, Moon, Sun, Share2, Copy
+  ArrowLeft, Download, Star, ShieldCheck, Check, Smartphone, Sparkles, Mail, Send, AlertCircle, Moon, Sun, Share2, Copy, QrCode
 } from 'lucide-react';
 import { AppReview } from './types';
 import { applyTheme } from './theme';
+import QRCode from 'qrcode';
 
 const FALLBACK_APPS: AppReview[] = [];
 
@@ -13,6 +14,50 @@ export default function GameDetailPage() {
   const [app, setApp] = useState<AppReview | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeThemeId, setActiveThemeId] = useState('saas-light');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
+
+  // Dynamically generate QR code for the game download URL (app.apkUrl)
+  useEffect(() => {
+    if (app && app.apkUrl && app.apkUrl.trim().startsWith('http')) {
+      QRCode.toDataURL(app.apkUrl, {
+        width: 250,
+        margin: 2,
+        color: {
+          dark: '#1e3a8a', // matches display-blue-900 / blue-900
+          light: '#ffffff'
+        }
+      })
+      .then(url => {
+        setQrCodeUrl(url);
+      })
+      .catch(err => {
+        console.error("Failed to generate download QR Code:", err);
+        setQrCodeUrl('');
+      });
+    } else if (app && app.apkUrl) {
+      // Fallback for relative paths or non-http links
+      const absoluteUrl = app.apkUrl.startsWith('/') 
+        ? `${window.location.origin}${app.apkUrl}` 
+        : app.apkUrl;
+      QRCode.toDataURL(absoluteUrl, {
+        width: 250,
+        margin: 2,
+        color: {
+          dark: '#1e3a8a',
+          light: '#ffffff'
+        }
+      })
+      .then(url => {
+        setQrCodeUrl(url);
+      })
+      .catch(err => {
+        console.error("Failed to generate download QR Code:", err);
+        setQrCodeUrl('');
+      });
+    } else {
+      setQrCodeUrl('');
+    }
+  }, [app]);
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
@@ -463,6 +508,34 @@ export default function GameDetailPage() {
                 📋 Link copied to clipboard! Ready to share.
               </p>
             )}
+
+            {/* Desktop Direct Scan QR Code */}
+            <div className="bg-blue-50/50 border border-blue-100/60 rounded-2xl p-3 flex flex-col items-center text-center mt-1">
+              <span className="text-[10px] font-black tracking-widest text-blue-900 uppercase mb-2 flex items-center gap-1.5 leading-none">
+                <QrCode className="h-3.5 w-3.5 text-blue-600 animate-pulse" /> Desktop Scan & Download
+              </span>
+              
+              {qrCodeUrl ? (
+                <div className="bg-white p-2 rounded-xl border border-blue-100 shadow-sm relative group cursor-zoom-in transition hover:shadow-md hover:border-blue-200 mb-2">
+                  <img 
+                    src={qrCodeUrl} 
+                    alt="Scan to Download APK Link" 
+                    className="w-24 h-24 object-contain transition-transform duration-200 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-blue-900/5 opacity-0 group-hover:opacity-100 rounded-xl transition-all flex items-center justify-center">
+                    <Smartphone className="h-4 w-4 text-blue-700 animate-bounce" />
+                  </div>
+                </div>
+              ) : (
+                <div className="w-24 h-24 bg-slate-100 rounded-xl animate-pulse flex items-center justify-center text-slate-400 text-[10px] uppercase mb-2">
+                  Preparing Code...
+                </div>
+              )}
+              
+              <p className="text-[9px] font-semibold text-slate-500 leading-normal max-w-[210px] select-none">
+                Scan with your phone camera to download <strong>{app.name} APK</strong> directly on your mobile device!
+              </p>
+            </div>
           </div>
         </div>
 

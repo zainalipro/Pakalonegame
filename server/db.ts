@@ -201,6 +201,7 @@ let memorySettings: Record<string, string> = {
   smtp_pass: 'tpvn kmpg yitw mchc',
   smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
   use_mailtrap: 'false',
+  use_sandbox_simulation: 'true',
   mailtrap_api_token: '',
   mailtrap_inbox_id: '',
   community_facebook: 'https://facebook.com',
@@ -1058,6 +1059,7 @@ export async function fetchAdminSettings() {
     community_telegram: 'https://t.me',
     portal_theme_mode: 'light',
     gemini_api_key: '',
+    use_sandbox_simulation: 'true',
     zapier_webhook_url: 'https://hooks.zapier.com/hooks/catch/27970514/43qcl5h/'
   };
 

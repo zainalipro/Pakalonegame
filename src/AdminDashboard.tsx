@@ -42,6 +42,7 @@ export default function AdminDashboard() {
     smtp_pass: 'tpvn kmpg yitw mchc',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     use_mailtrap: 'false',
+    use_sandbox_simulation: 'true',
     mailtrap_api_token: '',
     mailtrap_inbox_id: '',
     community_facebook: '',
@@ -1524,32 +1525,53 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                 <form onSubmit={handleSaveSmtp} className="space-y-4">
+                <form onSubmit={handleSaveSmtp} className="space-y-4">
                   {/* Delivery Mode Choice */}
                   <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/80 mb-2">
                     <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-2.5">Email Delivery Engine Protocol</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {/* Sandbox Simulation */}
                       <button
                         type="button"
-                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false' })}
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'true' })}
                         className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                          smtpSettings.use_mailtrap !== 'true'
+                          smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true'
+                            ? 'bg-blue-500/10 border-blue-500/50 text-blue-400'
+                            : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
+                        }`}
+                      >
+                        <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
+                          <span className={smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true' ? 'text-blue-400' : 'text-zinc-500'}>●</span>
+                          Sandbox Mock Simulation
+                        </div>
+                        <div className="text-3xs text-zinc-400 leading-normal">
+                          Bypasses outbound port locks entirely inside preview sandbox containers. Excellent for testing!
+                        </div>
+                      </button>
+
+                      {/* Standard Live SMTP */}
+                      <button
+                        type="button"
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'false' })}
+                        className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                          smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true'
                             ? 'bg-gold-500/10 border-gold-500/50 text-gold-400'
                             : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
                         }`}
                       >
                         <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
-                          <span className={smtpSettings.use_mailtrap !== 'true' ? 'text-gold-400' : 'text-zinc-500'}>●</span>
-                          Standard SMTP Protocol
+                          <span className={smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true' ? 'text-gold-400' : 'text-zinc-500'}>●</span>
+                          Standard Live SMTP
                         </div>
                         <div className="text-3xs text-zinc-400 leading-normal">
-                          Send via Gmail, Outlook, or custom SMTP relays. Subject to local firewall rules on ports 587/465.
+                          Send via Gmail or Outlook. GCP and live container firewalls usually block outbound email ports.
                         </div>
                       </button>
 
+                      {/* Mailtrap API */}
                       <button
                         type="button"
-                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'true' })}
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'true', use_sandbox_simulation: 'false' })}
                         className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
                           smtpSettings.use_mailtrap === 'true'
                             ? 'bg-amber-500/10 border-amber-500/50 text-amber-400'
@@ -1558,14 +1580,23 @@ export default function AdminDashboard() {
                       >
                         <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
                           <span className={smtpSettings.use_mailtrap === 'true' ? 'text-amber-400' : 'text-zinc-500'}>●</span>
-                          Mailtrap API (Recommended ⚡)
+                          Mailtrap API (HTTPS)
                         </div>
                         <div className="text-3xs text-zinc-400 leading-normal">
-                          Sends over wide-open HTTPS Port 443. Fully operational in sandbox containers without socket block issues!
+                          Delivers over wide-open HTTPS Port 443. Fully operational in sandbox containers out-of-the-box!
                         </div>
                       </button>
                     </div>
                   </div>
+
+                  {smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true' && (
+                    <div className="bg-blue-900/15 border border-blue-800/40 p-3.5 rounded-xl flex items-center gap-2 mb-2">
+                      <span className="text-blue-400 text-xs animate-pulse">●</span>
+                      <p className="text-[10px] text-zinc-300 font-semibold font-mono">
+                        GLOBAL SANDBOX SIMULATION ENABLED: Form dispatches and newsletters will route smoothly over virtual envelopes, displaying logs and preview screens without firing low-level port sockets!
+                      </p>
+                    </div>
+                  )}
 
                   {smtpSettings.use_mailtrap !== 'true' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -335,7 +335,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       return null;
     };
 
-    if (simulateOverride) {
+    if (simulateOverride || settings.use_sandbox_simulation === 'true') {
       console.log(`[SIMULATED EMAIL HANDSHAKE] To: ${to}, Subject: ${subject}`);
       return { success: true, simulated: true, messageId: "simulated-msg-" + Date.now() };
     }
