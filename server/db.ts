@@ -198,7 +198,7 @@ let memorySettings: Record<string, string> = {
   smtp_port: '587',
   smtp_secure: 'false',
   smtp_user: 'pakalone.online@gmail.com',
-  smtp_pass: 'bacutoidaqscmsoh',
+  smtp_pass: 'tpvn kmpg yitw mchc',
   smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
   use_mailtrap: 'false',
   mailtrap_api_token: '',
@@ -604,7 +604,7 @@ export async function initDb() {
         { key: 'smtp_port', val: '587' },
         { key: 'smtp_secure', val: 'false' },
         { key: 'smtp_user', val: 'pakalone.online@gmail.com' },
-        { key: 'smtp_pass', val: 'bacutoidaqscmsoh' },
+        { key: 'smtp_pass', val: 'tpvn kmpg yitw mchc' },
         { key: 'smtp_from', val: 'Pak Alone <pakalone.online@gmail.com>' }
       ];
       for (const item of smtpConfigs) {
@@ -1050,7 +1050,7 @@ export async function fetchAdminSettings() {
     smtp_port: '587',
     smtp_secure: 'false',
     smtp_user: 'pakalone.online@gmail.com',
-    smtp_pass: 'bacutoidaqscmsoh',
+    smtp_pass: 'tpvn kmpg yitw mchc',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     community_facebook: 'https://facebook.com',
     community_twitter: 'https://twitter.com',

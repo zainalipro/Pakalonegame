@@ -39,7 +39,7 @@ export default function AdminDashboard() {
     smtp_port: '587',
     smtp_secure: 'false',
     smtp_user: 'pakalone.online@gmail.com',
-    smtp_pass: 'bacutoidaqscmsoh',
+    smtp_pass: 'tpvn kmpg yitw mchc',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     use_mailtrap: 'false',
     mailtrap_api_token: '',
@@ -628,7 +628,7 @@ export default function AdminDashboard() {
       smtp_secure: 'false',
       smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
       smtp_user: 'pakalone.online@gmail.com',
-      smtp_pass: 'bacutoidaqscmsoh'
+      smtp_pass: 'tpvn kmpg yitw mchc'
     }));
     showToast('Applied Pak Alone Gmail preset (Port 587 TLS with App Password). Verified! 💡');
   };
@@ -1643,8 +1643,11 @@ export default function AdminDashboard() {
                           value={smtpSettings.smtp_from}
                           onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
                           className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                          placeholder="e.g. Pak Alone <zainalipro83@gmail.com>"
+                          placeholder="e.g. Pak Alone <noreply@pakalone.online>"
                         />
+                        <p className="text-[10px] text-amber-500/95 mt-1.5 leading-relaxed font-mono">
+                          ⚠️ <strong>Critical Production Rule:</strong> If Sandbox ID is blank (Live Delivery), Mailtrap requires this address to end in your verified custom sending domain (e.g., <code>noreply@pakalone.online</code>). Using a public address like <code>gmail.com</code> will be rejected as <strong>Unauthorized</strong> by Mailtrap.
+                        </p>
                       </div>
                       <div>
                         <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1 font-mono text-amber-400">Mailtrap API Token</label>

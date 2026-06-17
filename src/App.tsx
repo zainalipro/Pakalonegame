@@ -278,54 +278,54 @@ export default function App() {
       
       {/* 🇵🇰 Deep Royal Blue Header Block */}
       <div className="bg-gradient-to-r from-[#0d3a8e] to-[#0c4cbd] text-white shadow-xl">
-        <header className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <header className="max-w-5xl mx-auto px-3 sm:px-4 py-4 flex items-center justify-between gap-2.5 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Custom Logo or Circular P Emblem with Corona Ring & Shadow */}
             {portalLogo ? (
-              <div className="h-12 flex items-center justify-center bg-zinc-950/20 px-2 py-1 rounded-xl border border-white/10 shadow-sm backdrop-blur-3xs">
-                <img src={portalLogo} alt="Pakalone Games Logo" className="h-10 w-auto object-contain max-w-[160px]" />
+              <div className="h-10 sm:h-12 flex items-center justify-center bg-zinc-950/20 px-1.5 sm:px-2 py-1 rounded-xl border border-white/10 shadow-sm backdrop-blur-3xs flex-shrink-0 animate-fade-in">
+                <img src={portalLogo} alt="Pakalone Games Logo" className="h-8 sm:h-10 w-auto object-contain max-w-[120px] sm:max-w-[160px]" />
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-300 via-amber-400 to-yellow-600 p-[2.5px] shadow-lg flex items-center justify-center select-none flex-shrink-0 animate-pulse">
-                <div className="w-full h-full rounded-full bg-[#0a2e75] flex items-center justify-center font-black text-xl text-yellow-300 tracking-tighter shadow-inner">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-yellow-300 via-amber-400 to-yellow-600 p-[2px] sm:p-[2.5px] shadow-lg flex items-center justify-center select-none flex-shrink-0 animate-pulse">
+                <div className="w-full h-full rounded-full bg-[#0a2e75] flex items-center justify-center font-black text-lg sm:text-xl text-yellow-300 tracking-tighter shadow-inner font-mono">
                   P
                 </div>
               </div>
             )}
-            <div className="text-left">
-              <h1 className="font-display text-xl md:text-2xl font-black text-white tracking-tight uppercase leading-none drop-shadow">
+            <div className="text-left min-w-0">
+              <h1 className="font-display text-sm sm:text-lg md:text-2xl font-black text-white tracking-tight uppercase leading-none drop-shadow truncate">
                 Pakalone Games
               </h1>
-              <p className="text-[10px] font-extrabold text-yellow-300 tracking-wide mt-1 uppercase font-mono">
+              <p className="hidden xs:block text-[8px] sm:text-[10px] font-extrabold text-yellow-300 tracking-wide mt-1 uppercase font-mono truncate">
                 Pakistan's Choice Download Hub
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <span className="hidden md:inline-flex items-center gap-1.5 bg-[#082a69] border border-blue-500/30 rounded-full px-3 py-1 text-[11px] font-bold text-yellow-300">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            <span className="hidden md:inline-flex items-center gap-1.5 bg-[#082a69] border border-blue-500/30 rounded-full px-3 py-1 text-[11px] font-bold text-yellow-300 flex-shrink-0">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
               <span>Verified 2026 Stable APKs Only</span>
             </span>
             
             {/* Header Search Bar */}
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-blue-200">
-                <Search className="h-4 w-4" />
+              <span className="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-blue-200">
+                <Search className="h-3.5 w-3.5" />
               </span>
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-28 sm:w-40 md:w-56 rounded-xl bg-[#082a69] border border-blue-500/30 py-1.5 pl-9 pr-3 text-xs font-semibold text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all shadow-inner"
+                className="w-18 xs:w-28 sm:w-40 md:w-56 rounded-xl bg-[#082a69] border border-blue-500/30 py-1.5 pl-8 pr-2 text-2xs sm:text-xs font-semibold text-white placeholder-blue-300 focus:outline-none focus:ring-1.5 focus:ring-yellow-400 transition-all shadow-inner"
               />
             </div>
 
-            {/* Elegant Dark/Light Mode Loop Trigger */}
+            {/* Elegant Dark/Light Mode Loop Trigger (Always flex-shrink-0) */}
             <button
               onClick={toggleTheme}
-              className="p-2 bg-[#082a69] border border-blue-500/30 hover:bg-[#0c3989] rounded-xl text-yellow-300 transition duration-150 flex items-center justify-center cursor-pointer"
+              className="p-1.5 sm:p-2 bg-[#082a69] border border-blue-500/30 hover:bg-[#0c3989] rounded-xl text-yellow-300 transition duration-150 flex items-center justify-center cursor-pointer flex-shrink-0"
               title="Toggle theme appearance"
             >
               {activeThemeId === 'saas-light' ? (
@@ -338,6 +338,32 @@ export default function App() {
             </button>
           </div>
         </header>
+      </div>
+
+      {/* Floating Theme Controller for Mobile View with large 44px+ touch-target element */}
+      <div className="fixed bottom-4 right-4 z-50 md:hidden flex-shrink-0">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 px-3 py-2 bg-slate-900/90 text-white rounded-full shadow-2xl border border-slate-700/50 backdrop-blur-md active:scale-95 transition-all duration-200 cursor-pointer h-11"
+          id="mobile-floating-theme-toggle"
+        >
+          {activeThemeId === 'saas-light' ? (
+            <>
+              <Moon className="h-4.5 w-4.5 text-yellow-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Dark Mode</span>
+            </>
+          ) : activeThemeId === 'saas-dark' ? (
+            <>
+              <Sparkles className="h-4.5 w-4.5 text-sky-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-sky-100">Gold Theme</span>
+            </>
+          ) : (
+            <>
+              <Sun className="h-4.5 w-4.5 text-yellow-400" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Light Mode</span>
+            </>
+          )}
+        </button>
       </div>
 
       <div className="flex-grow max-w-5xl w-full mx-auto px-3 md:px-5 py-6 space-y-6">

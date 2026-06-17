@@ -1,17 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ShieldCheck, AlertTriangle, Scale, Check, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, AlertTriangle, Scale, Check, ShieldAlert, Sun, Moon, Sparkles } from 'lucide-react';
+import { applyTheme } from './theme';
 
 export default function Disclaimer() {
   const [activeTab, setActiveTab] = useState<'english' | 'urdu'>('english');
+  const [activeThemeId, setActiveThemeId] = useState('saas-light');
+
+  const toggleTheme = () => {
+    let nextTheme = 'saas-light';
+    if (activeThemeId === 'saas-light') {
+      nextTheme = 'saas-dark';
+    } else if (activeThemeId === 'saas-dark') {
+      nextTheme = 'gold';
+    } else {
+      nextTheme = 'saas-light';
+    }
+    setActiveThemeId(nextTheme);
+    applyTheme(nextTheme);
+  };
 
   useEffect(() => {
     document.title = "Important Disclaimer & Risk Warnings - Pakalone Pakistan";
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Load theme configuration
+    const loadThemeConfig = async () => {
+      let defaultTheme = 'saas-light';
+      try {
+        const res = await fetch('/api/public/settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.portal_theme_mode) {
+            defaultTheme = data.portal_theme_mode;
+          }
+        }
+      } catch (err) {
+        console.error("Theme configuration load error in Disclaimer:", err);
+      }
+      const userPreference = localStorage.getItem('pakalone-theme');
+      const themeToLoad = userPreference || defaultTheme;
+      setActiveThemeId(themeToLoad);
+      applyTheme(themeToLoad);
+    };
+    loadThemeConfig();
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased selection:bg-[#0d3a8e] selection:text-white">
+    <div className="min-h-screen bg-[var(--theme-bg)] flex flex-col font-sans text-[var(--theme-text-main)] antialiased transition-colors duration-300 selection:bg-[#0d3a8e] selection:text-white">
       {/* Top navbar bar */}
       <div className="bg-gradient-to-r from-[#0d3a8e] to-[#0c4cbd] text-white shadow-md">
         <header className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -24,23 +60,38 @@ export default function Disclaimer() {
               <img src="/logo.svg" alt="PakAlone Logo" className="h-[34px] w-auto object-contain max-w-[130px]" />
             </Link>
           </div>
-          <span className="inline-flex items-center gap-1 bg-[#082a69] border border-blue-500/30 rounded-full px-3 py-1 text-[10px] font-bold text-yellow-300">
-            <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />
-            <span>Risk Warnings Layer</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:inline-flex items-center gap-1 bg-[#082a69] border border-blue-500/30 rounded-full px-3 py-1 text-[10px] font-bold text-yellow-300">
+              <ShieldAlert className="h-3.5 w-3.5 text-rose-400" />
+              <span>Risk Warnings Layer</span>
+            </span>
+            <button
+               onClick={toggleTheme}
+               className="p-1.5 bg-[#082a69] border border-blue-500/30 hover:bg-[#0c3989] rounded-xl text-yellow-355 transition duration-150 flex items-center justify-center cursor-pointer flex-shrink-0"
+               title="Toggle theme appearance"
+            >
+              {activeThemeId === 'saas-light' ? (
+                <Moon className="h-4 w-4 text-yellow-300" />
+              ) : activeThemeId === 'saas-dark' ? (
+                <Sparkles className="h-4 w-4 text-sky-300" />
+              ) : (
+                <Sun className="h-4 w-4 text-yellow-400" />
+              )}
+            </button>
+          </div>
         </header>
       </div>
 
       <div className="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
         {/* Breadcrumb section */}
-        <div className="mb-6 flex items-center gap-1.5 text-2xs text-slate-400 font-bold uppercase tracking-wider">
-          <Link to="/" className="hover:text-[#0d3a8e] transition-colors">Home</Link>
+        <div className="mb-6 flex items-center gap-1.5 text-2xs text-[var(--theme-text-muted)] font-bold uppercase tracking-wider">
+          <Link to="/" className="hover:text-amber-500 transition-colors">Home</Link>
           <span>/</span>
-          <span className="text-slate-600">Disclaimer</span>
+          <span className="text-[var(--theme-text-main)]">Disclaimer</span>
         </div>
 
         {/* Translation tabs */}
-        <div className="mb-8 flex bg-white p-1 rounded-xl border border-slate-200 shadow-3xs max-w-sm">
+        <div className="mb-8 flex bg-[var(--theme-card)] p-1 rounded-xl border border-[var(--theme-border)] shadow-3xs max-w-sm">
           <button
             onClick={() => setActiveTab('english')}
             className={`flex-1 py-2 text-center text-xs font-black rounded-lg transition-all ${
@@ -59,17 +110,17 @@ export default function Disclaimer() {
           </button>
         </div>
 
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-[var(--theme-card)] rounded-3xl border border-[var(--theme-border)] shadow-xs overflow-hidden">
           {/* Top visual banner */}
-          <div className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex items-start gap-4">
-            <div className="p-3.5 bg-rose-50 text-rose-700 rounded-2xl flex-shrink-0 border border-rose-100">
+          <div className="bg-[var(--theme-header-bg)] border-b border-[var(--theme-border)] p-6 md:p-8 flex items-start gap-4">
+            <div className="p-3.5 bg-rose-950/20 text-rose-500 rounded-2xl flex-shrink-0 border border-[var(--theme-border)]">
               <AlertTriangle className="h-6 w-6 text-rose-600" />
             </div>
             <div>
-              <h2 className="text-xl md:text-2xl font-black text-[#0d3a8e] tracking-tight">
+              <h1 className="text-xl md:text-2xl font-black text-[var(--theme-text-main)] tracking-tight">
                 {activeTab === 'english' ? 'Legal Disclaimer & Volatility Warning' : 'قانونی دستبرداری اور مالی خطرات'}
-              </h2>
-              <p className="text-xs text-slate-500 mt-1 font-semibold leading-relaxed">
+              </h1>
+              <p className="text-xs text-[var(--theme-text-muted)] mt-1 font-semibold leading-relaxed">
                 {activeTab === 'english' 
                   ? 'This document serves as an explicit operational shield. Use of download links certifies alignment with these limitations of liability.'
                   : 'یہ دستاویز پاک الون کے استعمال کے بعد پیدا ہونے والی ذمہ داریوں کی حد کو واضح کرتی ہے۔ احتیاط سے پڑھیں۔'}
@@ -78,7 +129,7 @@ export default function Disclaimer() {
           </div>
 
           {activeTab === 'english' ? (
-            <div className="p-6 md:p-8 space-y-8 text-slate-650 leading-relaxed text-xs font-semibold">
+            <div className="p-6 md:p-8 space-y-8 text-[var(--theme-text-muted)] leading-relaxed text-xs font-semibold">
               
               {/* Section 1 */}
               <section className="space-y-3">
@@ -133,7 +184,7 @@ export default function Disclaimer() {
 
             </div>
           ) : (
-            <div className="p-6 md:p-8 space-y-8 text-slate-650 leading-relaxed text-right font-sans text-xs">
+            <div className="p-6 md:p-8 space-y-8 text-[var(--theme-text-muted)] leading-relaxed text-right font-sans text-xs">
               
               {/* Section 1 */}
               <section className="space-y-3">
@@ -181,6 +232,32 @@ export default function Disclaimer() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Floating Theme Controller for Mobile View with large 44px+ touch-target element */}
+      <div className="fixed bottom-4 right-4 z-50 md:hidden flex-shrink-0">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 px-3 py-2 bg-slate-900/90 text-white rounded-full shadow-2xl border border-slate-700/50 backdrop-blur-md active:scale-95 transition-all duration-200 cursor-pointer h-11"
+          id="mobile-floating-theme-toggle"
+        >
+          {activeThemeId === 'saas-light' ? (
+            <>
+              <Moon className="h-4.5 w-4.5 text-yellow-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Dark Mode</span>
+            </>
+          ) : activeThemeId === 'saas-dark' ? (
+            <>
+              <Sparkles className="h-4.5 w-4.5 text-sky-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-sky-100">Gold Theme</span>
+            </>
+          ) : (
+            <>
+              <Sun className="h-4.5 w-4.5 text-yellow-400" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Light Mode</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Footer minimal signature */}

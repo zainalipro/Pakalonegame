@@ -329,6 +329,18 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         ? `https://sandbox.api.mailtrap.io/api/send/${inboxId}`
         : `https://send.api.mailtrap.io/api/send`;
 
+      // Proactively detect public sender domains in Production delivery
+      if (!isSandbox) {
+        const publicDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "aol.com", "icloud.com"];
+        const domain = fromEmail.split("@")[1]?.toLowerCase() || "";
+        if (publicDomains.includes(domain)) {
+          return {
+            success: false,
+            error: `Mailtrap Production API requires a verified custom domain. You cannot send emails using a public domain like '@${domain}' (${fromEmail}). Please update your 'Sender From Header' to use your verified Mailtrap domain (e.g. Pak Alone <noreply@pakalone.online>).`
+          };
+        }
+      }
+
       console.log(`Sending Mailtrap email to: ${to} (Sandbox: ${isSandbox ? 'Yes, Inbox ID ' + inboxId : 'No'})`);
 
       try {
@@ -336,6 +348,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Api-Token': token,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -357,9 +370,18 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         const resBody = await response.json().catch(() => ({}));
         if (!response.ok) {
           console.error("❌ Mailtrap API error:", resBody);
+          let errorMsg = resBody.errors ? JSON.stringify(resBody.errors) : (resBody.message || response.statusText);
+          
+          if (response.status === 401) {
+            errorMsg = `Unauthorized (401). Please verify that:
+1. Your Mailtrap API Token is correct and currently active.
+2. If using Production Mode, the Sender address (${fromEmail}) belongs to a verified domain under your Mailtrap account settings.
+3. If using Sandbox Mode, ensure your API Token matches the inbox or is your general account API token, and verify the Sandbox Inbox ID is correct.`;
+          }
+          
           return { 
             success: false, 
-            error: `Mailtrap API rejected request: ${resBody.errors ? JSON.stringify(resBody.errors) : (resBody.message || response.statusText)}` 
+            error: `Mailtrap API rejected request: ${errorMsg}` 
           };
         }
 
@@ -1191,6 +1213,152 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     }
   });
 
+  // Server-side SEO metadata injectors for custom inner pages
+  app.get(["/privacy-policy"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      const settings = await fetchAdminSettings();
+      const seoTitle = "Privacy Policy - Pakalone Games Pakistan - 100% Reliable & Secure Portal";
+      const seoDescription = "Our official data protection guidelines. Learn how Pakalone (پاک الون) protects your user privacy and safeguards your gaming files in Pakistan.";
+      
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+      res.send(html);
+    } catch {
+      next();
+    }
+  });
+
+  app.get(["/terms", "/terms-of-service"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      const settings = await fetchAdminSettings();
+      const seoTitle = "Terms of Service - Pakalone Pakistan - Reliable Earning Companion";
+      const seoDescription = "Official terms of service for PakAlone. Ingest these policies before downloading our mobile casino and earning slots games in Pakistan.";
+      
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+      res.send(html);
+    } catch {
+      next();
+    }
+  });
+
+  app.get(["/disclaimer"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      const settings = await fetchAdminSettings();
+      const seoTitle = "Disclaimer - PakAlone Games - Safety First";
+      const seoDescription = "Important financial volatility warnings and third-party application disclaimers. Review risk limits concerning real cash slots apps.";
+      
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+      res.send(html);
+    } catch {
+      next();
+    }
+  });
+
+  app.get(["/about", "/about-us"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      const settings = await fetchAdminSettings();
+      const seoTitle = "About Us - PakAlone Games - Direct Safe Mirrors";
+      const seoDescription = "Learn more about PakAlone Games. We are Pakistan's premier independent verification center, auditing payout ratios and download mirrors.";
+      
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+      res.send(html);
+    } catch {
+      next();
+    }
+  });
+
+  app.get(["/contact", "/contact-us"], async (req, res, next) => {
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
+      const filePath = isProduction 
+        ? path.join(process.cwd(), 'dist', 'index.html')
+        : path.join(process.cwd(), 'index.html');
+      
+      if (!fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+        return;
+      }
+      
+      let html = fs.readFileSync(filePath, 'utf-8');
+      const settings = await fetchAdminSettings();
+      const seoTitle = "Contact Us - PakAlone Games Hub Helpdesk";
+      const seoDescription = "Reach out for help regarding casino slots downloads, fast cashout systems, or campaign proposals. Our Lahore based team is live 24/7.";
+      
+      html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
+      
+      if (settings.custom_header_scripts) {
+        html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
+      }
+      res.send(html);
+    } catch {
+      next();
+    }
+  });
+
   // High-fidelity server-side Dynamic SEO metadata injector for root homepage
   app.get(["/", "/index.html"], async (req, res, next) => {
     try {
@@ -1207,6 +1375,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       let html = fs.readFileSync(filePath, 'utf-8');
       
       const settings = await fetchAdminSettings();
+      const apps = await fetchAllApps();
       const seoTitle = settings.custom_meta_title || "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
       const seoDescription = settings.custom_meta_description || "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
       const seoKeywords = settings.custom_meta_keywords || "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online";
@@ -1302,6 +1471,19 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       if (settings.custom_header_scripts) {
         html = html.replace('</head>', `${settings.custom_header_scripts}\n</head>`);
       }
+
+      // Pre-renders a static list of all database games directly inside our root element for high-quality, search-engine crawlable SEO reference
+      let staticGamesHtml = `\n<div id="root">\n  <div style="display:none" aria-hidden="true" class="sr-only">\n    <h1>PakAlone Games - Pakistan's #1 Earning & Casino Games Directory</h1>\n    <ul>\n`;
+      if (Array.isArray(apps) && apps.length > 0) {
+        apps.forEach((gameItem: any) => {
+          if (gameItem && gameItem.id) {
+            staticGamesHtml += `      <li>\n        <a href="/game/${gameItem.id}">${gameItem.name} APK Download</a> - ${gameItem.tagline || 'Verified Earning Game Pakistan'}\n        <p>${gameItem.detailedReview ? gameItem.detailedReview.slice(0, 200).replace(/"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'Download official verified slots and casino APK safely.'}</p>\n      </li>\n`;
+          }
+        });
+      }
+      staticGamesHtml += `    </ul>\n  </div>\n</div>`;
+      
+      html = html.replace('<div id="root"></div>', staticGamesHtml);
 
       res.send(html);
     } catch (err) {

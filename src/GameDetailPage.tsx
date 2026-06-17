@@ -316,39 +316,66 @@ export default function GameDetailPage() {
       
       {/* Top Navigation Row */}
       <div className="bg-[var(--theme-header-bg)] border-b border-[var(--theme-border)] shadow-sm sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link to="/" className="inline-flex items-center gap-2 text-[var(--theme-text-muted)] hover:text-amber-500 font-bold transition text-sm">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-4 flex justify-between items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <Link to="/" className="inline-flex items-center gap-1 sm:gap-2 text-[var(--theme-text-muted)] hover:text-amber-500 font-bold transition text-xs sm:text-sm flex-shrink-0">
               <ArrowLeft className="h-4 w-4" />
-              <span>Back to Games</span>
+              <span>Back <span className="hidden xs:inline">to Games</span></span>
             </Link>
-            <span className="text-[var(--theme-border)] text-sm">|</span>
-            <Link to="/" className="flex items-center">
-              <img src="/logo.svg" alt="PakAlone Games Logo" className="h-8 w-auto object-contain max-w-[140px]" />
+            <span className="text-[var(--theme-border)] text-sm flex-shrink-0">|</span>
+            <Link to="/" className="flex items-center min-w-0">
+              <img src="/logo.svg" alt="PakAlone Games Logo" className="h-7 sm:h-8 w-auto object-contain max-w-[100px] sm:max-w-[140px] flex-shrink-0" />
             </Link>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Elegant Dark/Light Mode Loop Trigger */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {/* Elegant Dark/Light Mode Loop Trigger (Always flex-shrink-0) */}
             <button
               onClick={toggleTheme}
-              className="p-1.5 bg-[var(--theme-card)] border border-[var(--theme-border)] hover:bg-[var(--theme-card-hover)] rounded-xl text-yellow-500 transition duration-150 flex items-center justify-center cursor-pointer"
+              className="p-1.5 sm:p-2 bg-[var(--theme-card)] border border-[var(--theme-border)] hover:bg-[var(--theme-card-hover)] rounded-xl text-yellow-500 transition duration-150 flex items-center justify-center cursor-pointer flex-shrink-0"
               title="Toggle theme appearance"
             >
               {activeThemeId === 'saas-light' ? (
-                <Moon className="h-4 w-4 text-slate-700" />
+                <Moon className="h-4 w-4 text-slate-700 dark:text-zinc-300" />
               ) : activeThemeId === 'saas-dark' ? (
-                <Sparkles className="h-4 w-4 text-blue-300" />
+                <Sparkles className="h-4 w-4 text-sky-400" />
               ) : (
                 <Sun className="h-4 w-4 text-amber-500" />
               )}
             </button>
 
-            <div className="flex items-center gap-1.5 bg-[#082a69] border border-blue-500/30 rounded-full px-2.5 py-1 text-[11px] font-bold text-yellow-300">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-1 bg-[#082a69] border border-blue-500/30 rounded-full px-2 sm:px-2.5 py-1 text-[10px] sm:text-[11px] font-bold text-yellow-300 flex-shrink-0">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 animate-pulse flex-shrink-0" />
               <span className="hidden sm:inline">VERIFIED DIRECT HOST NODE</span>
+              <span className="inline sm:hidden">VERIFIED</span>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Floating Theme Controller for Mobile View with large 44px+ touch-target element */}
+      <div className="fixed bottom-4 right-4 z-50 md:hidden flex-shrink-0">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 px-3 py-2 bg-slate-900/90 text-white rounded-full shadow-2xl border border-slate-700/50 backdrop-blur-md active:scale-95 transition-all duration-200 cursor-pointer h-11"
+          id="mobile-floating-theme-toggle"
+        >
+          {activeThemeId === 'saas-light' ? (
+            <>
+              <Moon className="h-4.5 w-4.5 text-yellow-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Dark Mode</span>
+            </>
+          ) : activeThemeId === 'saas-dark' ? (
+            <>
+              <Sparkles className="h-4.5 w-4.5 text-sky-300" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-sky-100">Gold Theme</span>
+            </>
+          ) : (
+            <>
+              <Sun className="h-4.5 w-4.5 text-yellow-400" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-100">Light Mode</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Main Container */}
