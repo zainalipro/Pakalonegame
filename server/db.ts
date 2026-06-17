@@ -22,6 +22,10 @@ const ADMINS_FILE = path.join(process.cwd(), 'server', 'admins_config.json');
 
 // Get active database provider: 'supabase' | 'firebase' | 'memory'
 export function getActiveDbProvider(): 'supabase' | 'firebase' | 'memory' {
+  const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
+  if (fs.existsSync(configPath)) {
+    return 'firebase';
+  }
   if (useMemoryDb) return 'memory';
   if (!isPostgresConnected) {
     return 'memory';

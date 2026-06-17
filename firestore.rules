@@ -64,7 +64,9 @@ service cloud.firestore {
 
     // Matches for /admin_settings/{settingId}
     match /admin_settings/{settingId} {
-      allow read, write: if isAdmin() && isValidSetting(request.resource.data);
+      allow read: if isAdmin();
+      allow create, update: if isAdmin() && isValidSetting(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     // Matches for /subscribers/{subscriberId}
