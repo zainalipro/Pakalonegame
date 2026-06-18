@@ -22,10 +22,6 @@ const ADMINS_FILE = path.join(process.cwd(), 'server', 'admins_config.json');
 
 // Get active database provider: 'supabase' | 'firebase' | 'memory'
 export function getActiveDbProvider(): 'supabase' | 'firebase' | 'memory' {
-  const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
-  if (fs.existsSync(configPath)) {
-    return 'firebase';
-  }
   if (useMemoryDb) return 'memory';
   if (!isPostgresConnected) {
     return 'memory';
@@ -1058,6 +1054,9 @@ export async function fetchAdminSettings() {
     smtp_user: 'pakalone.online@gmail.com',
     smtp_pass: 'tpvn kmpg yitw mchc',
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
+    use_mailtrap: 'false',
+    mailtrap_api_token: '',
+    mailtrap_inbox_id: '',
     community_facebook: 'https://facebook.com',
     community_twitter: 'https://twitter.com',
     community_telegram: 'https://t.me',
