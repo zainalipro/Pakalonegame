@@ -97,7 +97,11 @@ export default function App() {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: subEmail })
+        body: JSON.stringify({ 
+          email: subEmail,
+          gameId: null,
+          gameName: 'Homepage Portal'
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Subscription failed");
@@ -174,20 +178,52 @@ export default function App() {
     fetchSettingsAndTheme();
   }, []);
 
-  // Reset standard homepage headers when returning from direct game detail pages to ensure correct index visibility
+  // Reset standard homepage headers or apply dynamic search query / category level SEO tags to maximize Google indexing
   useEffect(() => {
-    document.title = "PakAlone - Pakistan Online Casino Slots & Earning Games";
-    
-    const descMeta = document.querySelector('meta[name="description"]');
-    if (descMeta) {
-      descMeta.setAttribute('content', "Welcome to Pakalone (پاک الون), the premier directory for verified online earning apps and gaming APKs in Pakistan. Free download real money games, MMY App, CX777, All Slots 777, Jeeto786, 92BAR, and fast EasyPaisa or JazzCash cashout networks. Game download karo aur paise kamao safely!");
-    }
+    const baseDesc = "Pakistan's #1 platform for Pak Slots & earning game APK downloads. Play CX777, MMY App, Jeeto786, 92BAR & more. Instant EasyPaisa & JazzCash withdrawals. Free download 2026.";
+    const baseTitle = "PakAlone - Pakistan Online Casino Slots & Earning Games";
+    const baseKeywords = "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, ISB19, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online";
 
-    const keywordsMeta = document.querySelector('meta[name="keywords"]');
-    if (keywordsMeta) {
-      keywordsMeta.setAttribute('content', "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, ISB19, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online");
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim();
+      document.title = `${q} APK Download Pakistan - Verified Earning Slot Game | Pakalone`;
+      
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) {
+        descMeta.setAttribute('content', `Download and play ${q} APK in Pakistan. ${baseDesc}`);
+      }
+
+      const keywordsMeta = document.querySelector('meta[name="keywords"]');
+      if (keywordsMeta) {
+        keywordsMeta.setAttribute('content', `${q}, download ${q} APK, ${q} update 2026, ${q} pakistan game, custom search, pakalone`);
+      }
+    } else if (activeCategory && activeCategory !== 'all') {
+      const catTitle = activeCategory === 'hot' ? 'Hot & Trending Slots' : activeCategory === 'casino' ? 'Pak Slots & Casinos' : 'Earning Games & Apps';
+      document.title = `${catTitle} APK Downloads - Verified Earning Pakistan`;
+
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) {
+        descMeta.setAttribute('content', `Browse and download verified ${catTitle.toLowerCase()} in Pakistan with instant EasyPaisa or JazzCash cashouts. ${baseDesc}`);
+      }
+
+      const keywordsMeta = document.querySelector('meta[name="keywords"]');
+      if (keywordsMeta) {
+        keywordsMeta.setAttribute('content', `${activeCategory}, ${activeCategory} apks, pakistan earning slots, pakalone`);
+      }
+    } else {
+      document.title = baseTitle;
+
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) {
+        descMeta.setAttribute('content', baseDesc);
+      }
+
+      const keywordsMeta = document.querySelector('meta[name="keywords"]');
+      if (keywordsMeta) {
+        keywordsMeta.setAttribute('content', baseKeywords);
+      }
     }
-  }, []);
+  }, [searchQuery, activeCategory]);
 
   // Fetch from the database
   useEffect(() => {

@@ -65,6 +65,8 @@ export default function AdminDashboard() {
     id: number;
     email: string;
     subscribedAt: string;
+    gameId?: string;
+    gameName?: string;
   }
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
 
@@ -2217,10 +2219,15 @@ export default function AdminDashboard() {
                             <span className="text-[9px] text-zinc-500 block mt-0.5">
                               Joined: {new Date(sub.subscribedAt).toLocaleDateString()}
                             </span>
+                            {sub.gameName && (
+                              <span className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded text-[8px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                Game: {sub.gameName}
+                              </span>
+                            )}
                           </div>
                           <button
                             onClick={() => handleRemoveSubscriber(sub.email)}
-                            className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 p-1.5 rounded-md border border-rose-500/20 text-[9px] font-black cursor-pointer uppercase transition"
+                            className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 p-1.5 rounded-md border border-rose-500/20 text-[9px] font-black cursor-pointer uppercase transition flex-shrink-0"
                           >
                             DEL
                           </button>

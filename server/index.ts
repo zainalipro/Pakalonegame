@@ -773,36 +773,56 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
   // Newsletter Subscriptions Endpoints
   app.post("/api/subscribe", async (req, res) => {
     try {
-      const { email } = req.body;
+      const { email, gameId, gameName } = req.body;
       if (!email || !email.includes('@')) {
         res.status(400).json({ error: "Please enter a valid email address." });
         return;
       }
       const { ip, country } = getClientRequestDetails(req);
-      await addSubscriber(email, ip, country);
+      await addSubscriber(email, ip, country, gameId, gameName);
 
-      // Trigger automatic welcome notification email if SMTP details are configured
+      // Trigger automatic welcome notification email if any SMTP/API/sandbox delivery system is configured
       const settings = await fetchAdminSettings();
-      if (settings.smtp_host && settings.smtp_user && settings.smtp_pass) {
+      const hasEmailConfig = 
+        settings.use_sandbox_simulation === 'true' || 
+        (settings.use_resend === 'true' && settings.resend_api_key) ||
+        (settings.use_mailtrap === 'true' && settings.mailtrap_api_token) ||
+        (settings.smtp_host && settings.smtp_user && settings.smtp_pass);
+
+      if (hasEmailConfig) {
         await sendEmail({
           to: email,
           subject: "🎰 Welcome to Pakalone verified slots directory!",
           htmlText: `
-            <div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto;">
-              <div style="text-align: center; margin-bottom: 20px;">
-                <span style="font-size: 40px;">🎰</span>
-                <h2 style="color: #1e3a8a; margin: 10px 0 0 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">PAKALONE SLOTS</h2>
-                <p style="font-size: 12px; color: #3b82f6; font-weight: bold; text-transform: uppercase; tracking-wider: 1px; margin: 5px 0 0 0;">Official Agency Download Core</p>
+            <div style="font-family: sans-serif; padding: 24px; line-height: 1.6; color: #1e293b; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+              <div style="text-align: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
+                <span style="font-size: 48px;">🎰</span>
+                <h2 style="color: #0c4cbd; margin: 12px 0 4px 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">PAKALONE GAMES & SLOTS</h2>
+                <p style="font-size: 11px; color: #10b981; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 0;">Verified Pakistan Earning APK Portal</p>
               </div>
-              <div style="background-color: #ffffff; padding: 25px; border-radius: 8px; border: 1px solid #f1f5f9;">
-                <p style="margin-top: 0;">Hi Subscriber,</p>
-                <p>Thank you for subscribing to the official Pakalone Slots directory. You will now be the first to receive premium game updates, direct download APK nodes, and daily promotion codes!</p>
-                <p>Make sure to add this email sender to your contacts so you don't miss our periodic multiplier updates and easy EasyPaisa/JazzCash withdrawal strategies.</p>
-                <p style="margin-bottom: 0;">Happy Earning!</p>
+              <div style="background-color: #ffffff; padding: 28px; border-radius: 10px; border: 1px solid #f1f5f9;">
+                <p style="margin-top: 0; font-size: 15px; color: #0f172a; font-weight: 600;">Dear Subscriber,</p>
+                <p style="font-size: 14px; color: #334155;">Congratulations! Thank you for subscribing to <strong>PakAlone Games</strong>, Pakistan's #1 premier directory for safe earning software and slot app verification.</p>
+                
+                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 18px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+                  <strong style="color: #1e40af; font-size: 13.5px; display: block; margin-bottom: 4px;">🎯 Your Subscription Benefits Include:</strong>
+                  <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #1e3a8a; line-height: 1.5;">
+                    <li>Instant updates on CX777, MMY App, Jeeto786, 92BAR, and more.</li>
+                    <li>Verified secure download mirrors to avoid malware.</li>
+                    <li>Guaranteed safe EasyPaisa & JazzCash daily fast Cashout Guides.</li>
+                    <li>Exclusive daily promo codes and slot percentage reports!</li>
+                  </ul>
+                </div>
+
+                <p style="font-size: 13.5px; color: #475569; margin-bottom: 4px;">Make sure to search and check reviews directly on our platform regularly so you never miss a verified game. If you wish to visit the official catalog now, tap the link below:</p>
+                <p style="text-align: center; margin: 24px 0 12px 0;">
+                  <a href="https://pakalone.online" target="_blank" style="background-color: #0c4cbd; color: #ffffff; text-decoration: none; padding: 12px 28px; font-weight: bold; font-size: 14px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 6px rgba(12, 76, 189, 0.2);">Explore Vetted Games Now 🚀</a>
+                </p>
+                <p style="font-size: 11px; text-align: center; color: #94a3b8; margin: 18px 0 0 0;">(If you did not initiate this request, you may ignore this mail securely.)</p>
               </div>
-              <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #64748b;">
-                <p>© 2026 Pakalone Slots. All Rights Vetted and Verified.</p>
-                <p style="color: #94a3b8;">This was sent automatically via Pakalone Administration servers. If you did not trigger this request, you may contact support to terminate.</p>
+              <div style="text-align: center; margin-top: 24px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                <p style="margin: 0 0 4px 0; font-weight: 600;">© 2026 PakAlone Gaming Hub. All Integrity Audits Vetted.</p>
+                <p style="margin: 0; color: #94a3b8; font-size: 10px;">Sent automatically via PakAlone SSL HTTPS Verification Cluster.</p>
               </div>
             </div>
           `
@@ -845,11 +865,18 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       const { ip, country } = getClientRequestDetails(req);
       const saved = await submitUserMessage(name || "Anonymous User", email, subject || "General Support", message, ip, country);
 
-      // Optionally notify admin via SMTP if SMTP details exist
+      // Trigger notification email to admin if any SMTP/API/sandbox delivery system is configured
       const settings = await fetchAdminSettings();
-      if (settings.smtp_host && settings.smtp_user && settings.smtp_pass) {
+      const hasEmailConfig = 
+        settings.use_sandbox_simulation === 'true' || 
+        (settings.use_resend === 'true' && settings.resend_api_key) ||
+        (settings.use_mailtrap === 'true' && settings.mailtrap_api_token) ||
+        (settings.smtp_host && settings.smtp_user && settings.smtp_pass);
+
+      if (hasEmailConfig) {
+        const targetAdminEmail = settings.smtp_user || "pakalone.online@gmail.com";
         await sendEmail({
-          to: settings.smtp_user,
+          to: targetAdminEmail,
           subject: `📬 New User Query: ${subject || "General Inquiry"}`,
           htmlText: `
             <div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 8px;">

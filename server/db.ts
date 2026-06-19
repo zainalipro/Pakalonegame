@@ -645,6 +645,8 @@ export async function initDb() {
 
       await client.query(`ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS ip_address VARCHAR(100)`);
       await client.query(`ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS country VARCHAR(100)`);
+      await client.query(`ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS game_id VARCHAR(100)`);
+      await client.query(`ALTER TABLE subscribers ADD COLUMN IF NOT EXISTS game_name VARCHAR(255)`);
 
       await client.query(`
         CREATE TABLE IF NOT EXISTS user_messages (
@@ -1161,7 +1163,7 @@ export async function saveAdminSettings(settings: Record<string, string>) {
   }
 }
 
-export async function addSubscriber(email: string, ipAddress?: string, country?: string) {
+export async function addSubscriber(email: string, ipAddress?: string, country?: string, gameId?: string, gameName?: string) {
   const provider = getActiveDbProvider();
   if (provider === 'firebase') {
     const firestore = getFirebaseFirestore();
@@ -1172,6 +1174,8 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
           email,
           ip_address: ipAddress || null,
           country: country || null,
+          game_id: gameId || null,
+          game_name: gameName || null,
           subscribedAt: new Date().toISOString()
         });
         return true;
@@ -1188,6 +1192,8 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
         email, 
         ip_address: ipAddress || null,
         country: country || null,
+        game_id: gameId || null,
+        game_name: gameName || null,
         subscribed_at: new Date() 
       });
     }
@@ -1195,10 +1201,14 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
   }
   try {
     await pool.query(`
-      INSERT INTO subscribers (email, ip_address, country) 
-      VALUES ($1, $2, $3) 
-      ON CONFLICT (email) DO UPDATE SET ip_address = EXCLUDED.ip_address, country = EXCLUDED.country
-    `, [email, ipAddress || null, country || null]);
+      INSERT INTO subscribers (email, ip_address, country, game_id, game_name) 
+      VALUES ($1, $2, $3, $4, $5) 
+      ON CONFLICT (email) DO UPDATE SET 
+        ip_address = EXCLUDED.ip_address, 
+        country = EXCLUDED.country,
+        game_id = EXCLUDED.game_id,
+        game_name = EXCLUDED.game_name
+    `, [email, ipAddress || null, country || null, gameId || null, gameName || null]);
     return true;
   } catch (error) {
     console.error("addSubscriber failed, using memory fallback:", error);
@@ -1208,6 +1218,8 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
         email, 
         ip_address: ipAddress || null,
         country: country || null,
+        game_id: gameId || null,
+        game_name: gameName || null,
         subscribed_at: new Date() 
       });
     }
@@ -1230,6 +1242,8 @@ export async function fetchSubscribers() {
             email: data.email,
             ipAddress: data.ip_address || null,
             country: data.country || null,
+            gameId: data.game_id || null,
+            gameName: data.game_name || null,
             subscribedAt: data.subscribedAt ? new Date(data.subscribedAt) : new Date()
           });
         });
@@ -1246,6 +1260,8 @@ export async function fetchSubscribers() {
       email: s.email,
       ipAddress: s.ip_address || null,
       country: s.country || null,
+      gameId: s.game_id || null,
+      gameName: s.game_name || null,
       subscribedAt: s.subscribed_at
     }));
   }
@@ -1256,6 +1272,8 @@ export async function fetchSubscribers() {
       email: row.email,
       ipAddress: row.ip_address || null,
       country: row.country || null,
+      gameId: row.game_id || null,
+      gameName: row.game_name || null,
       subscribedAt: row.subscribed_at
     }));
   } catch (error) {
@@ -1265,6 +1283,8 @@ export async function fetchSubscribers() {
       email: s.email,
       ipAddress: s.ip_address || null,
       country: s.country || null,
+      gameId: s.game_id || null,
+      gameName: s.game_name || null,
       subscribedAt: s.subscribed_at
     }));
   }

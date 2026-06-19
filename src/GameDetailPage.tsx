@@ -287,7 +287,11 @@ export default function GameDetailPage() {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: subEmail })
+        body: JSON.stringify({ 
+          email: subEmail, 
+          gameId: id, 
+          gameName: app ? app.name : 'Unknown Slot App' 
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Subscription failed");
