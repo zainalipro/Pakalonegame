@@ -790,23 +790,27 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
         (settings.smtp_host && settings.smtp_user && settings.smtp_pass);
 
       if (hasEmailConfig) {
+        const host = req.get('host') || 'pakalone.online';
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+        const baseUrl = `${protocol}://${host}`;
+
         await sendEmail({
           to: email,
           subject: "🎰 Welcome to Pakalone verified slots directory!",
           htmlText: `
-            <div style="font-family: sans-serif; padding: 24px; line-height: 1.6; color: #1e293b; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-              <div style="text-align: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
-                <span style="font-size: 48px;">🎰</span>
-                <h2 style="color: #0c4cbd; margin: 12px 0 4px 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">PAKALONE GAMES & SLOTS</h2>
-                <p style="font-size: 11px; color: #10b981; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin: 0;">Verified Pakistan Earning APK Portal</p>
+            <div style="font-family: 'Helvetica Neue', Arial, sans-serif; padding: 24px; line-height: 1.6; color: #e2e8f0; background-color: #0b0b0e; border-radius: 16px; border: 1px solid #1a1a24; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.45);">
+              <div style="text-align: center; margin-bottom: 24px; border-bottom: 2px solid #1f1f2e; padding-bottom: 20px; background: #000000; border-radius: 12px; padding: 24px 12px;">
+                <img src="${baseUrl}/logo.png" alt="PAKALONE GAMES" style="max-height: 140px; max-width: 100%; height: auto; display: block; margin: 0 auto 16px auto;" />
+                <h2 style="color: #ffffff; margin: 8px 0 4px 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase;">PAKALONE GAMES & SLOTS</h2>
+                <p style="font-size: 11px; color: #82e212; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0;">Verified Pakistan Earning APK Portal</p>
               </div>
-              <div style="background-color: #ffffff; padding: 28px; border-radius: 10px; border: 1px solid #f1f5f9;">
-                <p style="margin-top: 0; font-size: 15px; color: #0f172a; font-weight: 600;">Dear Subscriber,</p>
-                <p style="font-size: 14px; color: #334155;">Congratulations! Thank you for subscribing to <strong>PakAlone Games</strong>, Pakistan's #1 premier directory for safe earning software and slot app verification.</p>
+              <div style="background-color: #12121c; padding: 28px; border-radius: 12px; border: 1px solid #1f1f2e; color: #d1d5db;">
+                <p style="margin-top: 0; font-size: 16px; color: #ffffff; font-weight: 600;">Dear Subscriber,</p>
+                <p style="font-size: 14.5px; color: #9ca3af; line-height: 1.7;">Congratulations! Thank you for subscribing to <strong>PakAlone Games</strong>, Pakistan's #1 premier directory for safe earning software and slot app verification.</p>
                 
-                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 18px; margin: 20px 0; border-radius: 0 6px 6px 0;">
-                  <strong style="color: #1e40af; font-size: 13.5px; display: block; margin-bottom: 4px;">🎯 Your Subscription Benefits Include:</strong>
-                  <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #1e3a8a; line-height: 1.5;">
+                <div style="background-color: #152410; border-left: 4px solid #82e212; padding: 14px 18px; margin: 24px 0; border-radius: 0 8px 8px 0;">
+                  <strong style="color: #a3e635; font-size: 14px; display: block; margin-bottom: 6px;">🎯 Your Subscription Benefits Include:</strong>
+                  <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #d9f99d; line-height: 1.6;">
                     <li>Instant updates on CX777, MMY App, Jeeto786, 92BAR, and more.</li>
                     <li>Verified secure download mirrors to avoid malware.</li>
                     <li>Guaranteed safe EasyPaisa & JazzCash daily fast Cashout Guides.</li>
@@ -814,15 +818,15 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
                   </ul>
                 </div>
 
-                <p style="font-size: 13.5px; color: #475569; margin-bottom: 4px;">Make sure to search and check reviews directly on our platform regularly so you never miss a verified game. If you wish to visit the official catalog now, tap the link below:</p>
-                <p style="text-align: center; margin: 24px 0 12px 0;">
-                  <a href="https://pakalone.online" target="_blank" style="background-color: #0c4cbd; color: #ffffff; text-decoration: none; padding: 12px 28px; font-weight: bold; font-size: 14px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 6px rgba(12, 76, 189, 0.2);">Explore Vetted Games Now 🚀</a>
+                <p style="font-size: 13.5px; color: #9ca3af; margin-bottom: 4px;">Make sure to search and check reviews directly on our platform regularly so you never miss a verified game. If you wish to visit the official catalog now, tap the link below:</p>
+                <p style="text-align: center; margin: 28px 0 16px 0;">
+                  <a href="https://pakalone.online" target="_blank" style="background-color: #82e212; color: #000000; text-decoration: none; padding: 14px 32px; font-weight: bold; font-size: 14px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 15px rgba(130, 226, 18, 0.4); text-transform: uppercase; letter-spacing: 1px;">Explore Vetted Games Now 🚀</a>
                 </p>
-                <p style="font-size: 11px; text-align: center; color: #94a3b8; margin: 18px 0 0 0;">(If you did not initiate this request, you may ignore this mail securely.)</p>
+                <p style="font-size: 11px; text-align: center; color: #6b7280; margin: 18px 0 0 0;">(If you did not initiate this request, you may ignore this mail securely.)</p>
               </div>
-              <div style="text-align: center; margin-top: 24px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 16px;">
-                <p style="margin: 0 0 4px 0; font-weight: 600;">© 2026 PakAlone Gaming Hub. All Integrity Audits Vetted.</p>
-                <p style="margin: 0; color: #94a3b8; font-size: 10px;">Sent automatically via PakAlone SSL HTTPS Verification Cluster.</p>
+              <div style="text-align: center; margin-top: 24px; font-size: 11px; color: #4b5563; border-top: 1px solid #1f1f2e; padding-top: 20px;">
+                <p style="margin: 0 0 4px 0; font-weight: 600; color: #9ca3af;">© 2026 PakAlone Gaming Hub. All Integrity Audits Vetted.</p>
+                <p style="margin: 0; color: #6b7280; font-size: 10px;">Sent automatically via PakAlone SSL HTTPS Verification Cluster.</p>
               </div>
             </div>
           `
