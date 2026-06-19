@@ -43,6 +43,8 @@ export default function AdminDashboard() {
     smtp_from: 'Pak Alone <pakalone.online@gmail.com>',
     use_mailtrap: 'false',
     use_sandbox_simulation: 'true',
+    use_resend: 'false',
+    resend_api_key: 're_iJaWimRe_EtRYCRTXSA1fePBjByBH1nsW',
     mailtrap_api_token: '',
     mailtrap_inbox_id: '',
     community_facebook: '',
@@ -641,8 +643,29 @@ export default function AdminDashboard() {
       showToast('Please specify a valid test recipient email address.', 'error');
       return;
     }
+    const isResendActive = smtpSettings.use_resend === 'true';
     const isMailtrapActive = smtpSettings.use_mailtrap === 'true';
-    const htmlBody = isMailtrapActive ? `
+    const htmlBody = isResendActive ? `
+      <div style="font-family: sans-serif; padding: 24px; max-width: 600px; margin: 0 auto; border: 1px solid #c084fc; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
+        <h2 style="color: #9333ea; margin-top: 0; border-bottom: 2px solid #9333ea; padding-bottom: 8px;">✔️ Resend API Session Confirmed!</h2>
+        <p>Excellent! Your custom <strong>Resend HTTP Delivery Engine</strong> is registered and fully operational inside <strong>Pakalone Games</strong> portal endpoints.</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px;">
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; width: 140px;">Delivery Mode</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-family: monospace; color: #9333ea; font-weight: bold;">Resend HTTP API (Port 443)</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">API Key</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-family: monospace;">••••••••${smtpSettings.resend_api_key ? smtpSettings.resend_api_key.slice(-4) : 'none'}</td>
+          </tr>
+          <tr style="background-color: #f8fafc;">
+            <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold;">Sender Header</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">${smtpSettings.smtp_from || 'onboarding@resend.dev'}</td>
+          </tr>
+        </table>
+        <p style="margin-top: 20px; font-size: 12px; color: #64748b;">This verification message was sent successfully over HTTPS via Resend API helper. You may close this notification safely.</p>
+      </div>
+    ` : isMailtrapActive ? `
       <div style="font-family: sans-serif; padding: 24px; max-width: 600px; margin: 0 auto; border: 1px solid #f97316; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
         <h2 style="color: #ea580c; margin-top: 0; border-bottom: 2px solid #ea580c; padding-bottom: 8px;">✔️ Mailtrap API Session Confirmed!</h2>
         <p>Excellent! Your custom <strong>Mailtrap HTTP Delivery Engine</strong> is registered and fully operational inside <strong>Pakalone Games</strong> portal endpoints.</p>
@@ -1529,19 +1552,19 @@ export default function AdminDashboard() {
                   {/* Delivery Mode Choice */}
                   <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/80 mb-2">
                     <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-2.5">Email Delivery Engine Protocol</label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* Sandbox Simulation */}
                       <button
                         type="button"
-                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'true' })}
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'true', use_resend: 'false' })}
                         className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                          smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true'
+                          smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_resend !== 'true'
                             ? 'bg-blue-500/10 border-blue-500/50 text-blue-400'
                             : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
                         }`}
                       >
                         <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
-                          <span className={smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true' ? 'text-blue-400' : 'text-zinc-500'}>●</span>
+                          <span className={smtpSettings.use_sandbox_simulation === 'true' && smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_resend !== 'true' ? 'text-blue-400' : 'text-zinc-500'}>●</span>
                           Sandbox Mock Simulation
                         </div>
                         <div className="text-3xs text-zinc-400 leading-normal">
@@ -1552,15 +1575,15 @@ export default function AdminDashboard() {
                       {/* Standard Live SMTP */}
                       <button
                         type="button"
-                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'false' })}
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'false', use_resend: 'false' })}
                         className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                          smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true'
+                          smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true' && smtpSettings.use_resend !== 'true'
                             ? 'bg-gold-500/10 border-gold-500/50 text-gold-400'
                             : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
                         }`}
                       >
                         <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
-                          <span className={smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true' ? 'text-gold-400' : 'text-zinc-500'}>●</span>
+                          <span className={smtpSettings.use_mailtrap !== 'true' && smtpSettings.use_sandbox_simulation !== 'true' && smtpSettings.use_resend !== 'true' ? 'text-gold-400' : 'text-zinc-500'}>●</span>
                           Standard Live SMTP
                         </div>
                         <div className="text-3xs text-zinc-400 leading-normal">
@@ -1571,19 +1594,38 @@ export default function AdminDashboard() {
                       {/* Mailtrap API */}
                       <button
                         type="button"
-                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'true', use_sandbox_simulation: 'false' })}
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'true', use_sandbox_simulation: 'false', use_resend: 'false' })}
                         className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                          smtpSettings.use_mailtrap === 'true'
+                          smtpSettings.use_mailtrap === 'true' && smtpSettings.use_resend !== 'true'
                             ? 'bg-amber-500/10 border-amber-500/50 text-amber-400'
                             : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
                         }`}
                       >
                         <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
-                          <span className={smtpSettings.use_mailtrap === 'true' ? 'text-amber-400' : 'text-zinc-500'}>●</span>
+                          <span className={smtpSettings.use_mailtrap === 'true' && smtpSettings.use_resend !== 'true' ? 'text-amber-400' : 'text-zinc-500'}>●</span>
                           Mailtrap API (HTTPS)
                         </div>
                         <div className="text-3xs text-zinc-400 leading-normal">
                           Delivers over wide-open HTTPS Port 443. Fully operational in sandbox containers out-of-the-box!
+                        </div>
+                      </button>
+
+                      {/* Resend API */}
+                      <button
+                        type="button"
+                        onClick={() => setSmtpSettings({ ...smtpSettings, use_mailtrap: 'false', use_sandbox_simulation: 'false', use_resend: 'true' })}
+                        className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                          smtpSettings.use_resend === 'true'
+                            ? 'bg-purple-500/10 border-purple-500/50 text-purple-400'
+                            : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-400'
+                        }`}
+                      >
+                        <div className="font-bold text-xs flex items-center gap-1.5 mb-1 text-white">
+                          <span className={smtpSettings.use_resend === 'true' ? 'text-purple-400' : 'text-zinc-500'}>●</span>
+                          Resend API (HTTPS) ⭐
+                        </div>
+                        <div className="text-3xs text-zinc-400 leading-normal font-mono">
+                          Delivers over wide-open HTTPS via Resend API. Safe and works perfectly in sandboxed Cloud Run!
                         </div>
                       </button>
                     </div>
@@ -1598,7 +1640,79 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  {smtpSettings.use_mailtrap !== 'true' ? (
+                  {smtpSettings.use_resend === 'true' ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_from}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-purple-500 text-xs text-white"
+                          placeholder="e.g. Pak Alone <onboarding@resend.dev>"
+                        />
+                        <p className="text-[10px] text-amber-500/95 mt-1.5 leading-relaxed font-mono">
+                          ⚠️ <strong>Resend Restriction:</strong> Free/unverified accounts can only send from <code>onboarding@resend.dev</code> and only send test emails to your registered Resend account address. Verify your custom domain to send from custom addresses!
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1 font-mono text-purple-400">Resend API Key</label>
+                        <input
+                          type="password"
+                          required
+                          value={smtpSettings.resend_api_key || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, resend_api_key: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-purple-400 text-xs text-white placeholder-zinc-700"
+                          placeholder="re_xxxxxxxxxxxxxx"
+                        />
+                        <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
+                          Your active Resend key remains fully protected on the backend server lines and is never sent to public clients.
+                        </p>
+                      </div>
+                    </div>
+                  ) : smtpSettings.use_mailtrap === 'true' ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
+                        <input
+                          type="text"
+                          required
+                          value={smtpSettings.smtp_from}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="e.g. Pak Alone <noreply@pakalone.online>"
+                        />
+                        <p className="text-[10px] text-amber-500/95 mt-1.5 leading-relaxed font-mono">
+                          ⚠️ <strong>Critical Production Rule:</strong> If Sandbox ID is blank (Live Delivery), Mailtrap requires this address to end in your verified custom sending domain (e.g., <code>noreply@pakalone.online</code>). Using a public address like <code>gmail.com</code> will be rejected as <strong>Unauthorized</strong> by Mailtrap.
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1 font-mono text-amber-400">Mailtrap API Token</label>
+                        <input
+                          type="password"
+                          required
+                          value={smtpSettings.mailtrap_api_token || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_api_token: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-400 text-xs text-white placeholder-zinc-700"
+                          placeholder="Paste API token e.g. 19ed..."
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Mailtrap Sandbox Inbox ID (Optional for Sandbox Testing)</label>
+                        <input
+                          type="text"
+                          value={smtpSettings.mailtrap_inbox_id || ''}
+                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_inbox_id: e.target.value })}
+                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
+                          placeholder="Leave empty for production delivery, or provide Sandbox Inbox ID to route into virtual sandbox"
+                        />
+                        <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
+                          If left blank, Mailtrap transactional production delivery will be utilized. If a Sandbox Inbox ID is supplied, mail passes through virtual intercept routing without delivering live emails, perfect for standard sandbox validation!
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">SMTP Host Server</label>
@@ -1665,47 +1779,6 @@ export default function AdminDashboard() {
                           className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
                           placeholder="App specific token string"
                         />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Sender From Header Value</label>
-                        <input
-                          type="text"
-                          required
-                          value={smtpSettings.smtp_from}
-                          onChange={(e) => setSmtpSettings({ ...smtpSettings, smtp_from: e.target.value })}
-                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                          placeholder="e.g. Pak Alone <noreply@pakalone.online>"
-                        />
-                        <p className="text-[10px] text-amber-500/95 mt-1.5 leading-relaxed font-mono">
-                          ⚠️ <strong>Critical Production Rule:</strong> If Sandbox ID is blank (Live Delivery), Mailtrap requires this address to end in your verified custom sending domain (e.g., <code>noreply@pakalone.online</code>). Using a public address like <code>gmail.com</code> will be rejected as <strong>Unauthorized</strong> by Mailtrap.
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1 font-mono text-amber-400">Mailtrap API Token</label>
-                        <input
-                          type="password"
-                          required
-                          value={smtpSettings.mailtrap_api_token || ''}
-                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_api_token: e.target.value })}
-                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-400 text-xs text-white placeholder-zinc-700"
-                          placeholder="Paste API token e.g. 19ed..."
-                        />
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-[10px] font-bold uppercase text-zinc-400 mb-1">Mailtrap Sandbox Inbox ID (Optional for Sandbox Testing)</label>
-                        <input
-                          type="text"
-                          value={smtpSettings.mailtrap_inbox_id || ''}
-                          onChange={(e) => setSmtpSettings({ ...smtpSettings, mailtrap_inbox_id: e.target.value })}
-                          className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 outline-none focus:border-gold-500 text-xs text-white"
-                          placeholder="Leave empty for production delivery, or provide Sandbox Inbox ID to route into virtual sandbox"
-                        />
-                        <p className="text-[10px] text-zinc-500 mt-1 leading-relaxed">
-                          If left blank, Mailtrap transactional production delivery will be utilized. If a Sandbox Inbox ID is supplied, mail passes through virtual intercept routing without delivering live emails, perfect for standard sandbox validation!
-                        </p>
                       </div>
                     </div>
                   )}

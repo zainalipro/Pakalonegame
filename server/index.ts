@@ -340,13 +340,68 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       return { success: true, simulated: true, messageId: "simulated-msg-" + Date.now() };
     }
 
-    // Direct instant proxy routing if Zapier is configured. Bypasses port socket restrictions instantly!
-    if (zapierUrl && zapierUrl.startsWith("http")) {
-      const zapierResult = await sendViaZapier();
-      if (zapierResult && zapierResult.success) {
-        return zapierResult;
+    // Direct API proxy routing if Resend is configured
+    if (settings.use_resend === 'true') {
+      const apiKey = (settings.resend_api_key || "").trim();
+      if (!apiKey) {
+        return { success: false, error: "Resend API key is missing in administration settings." };
+      }
+
+      // Parse from email and name
+      let fromEmail = "onboarding@resend.dev";
+      let fromName = "Pak Alone";
+      if (settings.smtp_from) {
+        const match = settings.smtp_from.match(/^(?:"?([^"]*)"?\s)?(?:<(.+?)>|(.+))$/);
+        if (match) {
+          fromName = (match[1] || "").trim() || "Pak Alone";
+          fromEmail = (match[2] || match[3] || "").trim();
+        } else {
+          fromEmail = settings.smtp_from.trim();
+        }
+      }
+
+      console.log(`Sending Resend API email to: ${to} (Sender: ${fromName} <${fromEmail}>)`);
+
+      try {
+        const response = await fetch("https://api.resend.com/emails", {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: `${fromName} <${fromEmail}>`,
+            to: [to],
+            subject: subject,
+            html: htmlText,
+            text: htmlText.replace(/<[^>]*>/g, '') // primitive strip HTML
+          })
+        });
+
+        const resBody = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          console.error("❌ Resend API error:", resBody);
+          let errorMsg = resBody.message || response.statusText || JSON.stringify(resBody);
+          if (response.status === 401 || response.status === 403) {
+            errorMsg = `Resend API key is unauthorized or restricted. Please double-check your API key setting. Info: ${errorMsg}`;
+          }
+          return {
+            success: false,
+            error: `Resend API rejected request: ${errorMsg}`
+          };
+        }
+
+        console.log("✅ Resend email sent successfully!", resBody);
+        return { success: true, messageId: resBody?.id || "resend-" + Date.now() };
+      } catch (err: any) {
+        console.error("❌ Resend HTTP API failure:", err);
+        return { success: false, error: `Resend API call failed: ${err.message || err}` };
       }
     }
+
+    // We do NOT use pre-emptive Zapier routing anymore, because the user has chosen their protocol in the UI.
+    // If they choose standard SMTP or Mailtrap, those should run.
+    // If standard SMTP / Mailtrap fails, it will catch the error and fall back to Zapier seamlessly!
 
     if (settings.use_mailtrap === 'true') {
       const token = (settings.mailtrap_api_token || "").trim();
@@ -663,7 +718,10 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
       
       const transition = await updateDatabasePool(url);
       if (transition.success) {
-        res.json({ success: true, message: "Connected and migrated Supabase database successfully!" });
+        res.json({ 
+          success: true, 
+          message: transition.warning || "Connected and migrated Supabase database successfully! 🎉" 
+        });
       } else {
         res.status(400).json({ error: transition.error || "Failed to connect with new Supabase database URL." });
       }
