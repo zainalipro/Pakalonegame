@@ -1047,79 +1047,6 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     res.send(robots);
   });
 
-  // High-fidelity server-side Dynamic SEO metadata injector for single-page details
-  app.get("/game/:id", async (req, res) => {
-    try {
-      const appItem = await findAppById(req.params.id);
-      const isProduction = process.env.NODE_ENV === "production";
-      const filePath = isProduction 
-        ? path.join(process.cwd(), 'dist', 'index.html')
-        : path.join(process.cwd(), 'index.html');
-      
-      if (!fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-        return;
-      }
-      
-      let html = fs.readFileSync(filePath, 'utf-8');
-      
-      if (appItem) {
-        const badgeWord = appItem.badge ? appItem.badge.toUpperCase() : 'VERIFIED';
-        // Tailored specifically to high-intent rank search terms (like "game apk download", "real money app")
-        const seoTitle = `${appItem.name} APK Download {${badgeWord}} - Real Money Earning Portal Pakistan 2026`;
-        const methodStr = (appItem.methods && appItem.methods.length > 0) 
-          ? appItem.methods.join(', ') 
-          : 'Easypaisa, JazzCash';
-        const seoDescription = `Download ${appItem.name} APK (${appItem.apkSize || 'Latest Version'}) for Androids. ${appItem.tagline || 'Popular instant checkout earning game in Pakistan.'} Cashout your real-money earnings instantly via ${methodStr}. Rated ${appItem.rating}/5.`;
-        const seoKeywords = `${appItem.name}, ${appItem.name} APK download, ${appItem.name} real money app, online earning in Pakistan, easy earning games 2026, JazzCash, Easypaisa, pakalone, pakalone slots`;
-
-        // Exact pattern replacement of default meta tags in index.html
-        html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
-        html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
-        html = html.replace(/<meta\s+name="keywords"\s+content=".*?"\s*\/?>/gi, `<meta name="keywords" content="${seoKeywords}" />`);
-        
-        // Open Graph tags for social media link sharing preview ranking
-        html = html.replace(/<meta\s+property="og:title"\s+content=".*?"\s*\/?>/gi, `<meta property="og:title" content="${seoTitle}" />`);
-        html = html.replace(/<meta\s+property="og:description"\s+content=".*?"\s*\/?>/gi, `<meta property="og:description" content="${seoDescription}" />`);
-        
-        // App structured JSON-LD snippet for google rich application result cards
-        const jsonLd = `
-    <!-- Dynamic SoftwareApplication rich results schema tag built specifically for index ranking -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "${appItem.name}",
-      "operatingSystem": "Android",
-      "applicationCategory": "GameApplication",
-      "fileSize": "${appItem.apkSize || '35 MB'}",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "${appItem.rating || '4.8'}",
-        "bestRating": "5",
-        "ratingCount": "${Math.floor(Math.random() * 401) + 180}"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "PKR"
-      }
-    }
-    </script>
-        `;
-        html = html.replace('</head>', `${jsonLd}\n</head>`);
-      }
-      res.send(html);
-    } catch (err) {
-      console.error("SEO dynamic injector error:", err);
-      const isProduction = process.env.NODE_ENV === "production";
-      const filePath = isProduction 
-        ? path.join(process.cwd(), 'dist', 'index.html')
-        : path.join(process.cwd(), 'index.html');
-      res.sendFile(filePath);
-    }
-  });
-
   // Dynamic LLMs.txt Endpoint conforming to emerging standard specifications for LLM web search and crawl optimization
   app.get("/llms.txt", async (req, res) => {
     try {
@@ -1199,47 +1126,6 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     } catch (error) {
       console.error("Failed to dynamically generate llms.txt:", error);
       res.status(500).send("Error compiling structured LLM text data.");
-    }
-  });
-
-  // Dynamic XML Sitemap Endpoint for Search Engine Crawler discovery (Google, Bing)
-  app.get("/sitemap.xml", async (req, res) => {
-    try {
-      const apps = await fetchAllApps();
-      const baseUrl = "https://pakalone.online";
-      
-      let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-      
-      // Main Landing Page
-      sitemap += `  <url>\n`;
-      sitemap += `    <loc>${baseUrl}/</loc>\n`;
-      sitemap += `    <changefreq>daily</changefreq>\n`;
-      sitemap += `    <priority>1.0</priority>\n`;
-      sitemap += `  </url>\n`;
-      
-      // Direct high-fidelity verified game routes returned dynamically
-      if (Array.isArray(apps)) {
-        apps.forEach((appItem: any) => {
-          if (appItem && appItem.id) {
-            sitemap += `  <url>\n`;
-            sitemap += `    <loc>${baseUrl}/game/${appItem.id}</loc>\n`;
-            sitemap += `    <changefreq>weekly</changefreq>\n`;
-            sitemap += `    <priority>0.8</priority>\n`;
-            sitemap += `  </url>\n`;
-          }
-        });
-      }
-      
-      sitemap += `</urlset>\n`;
-      
-      res.header("Content-Type", "application/xml");
-      res.send(sitemap);
-    } catch (error) {
-      console.error("Failed to dynamically compile sitemap.xml:", error);
-      // Fallback response inside safety loop
-      res.header("Content-Type", "application/xml");
-      res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<url><loc>https://pakalone.online/</loc><priority>1.0</priority></url>\n</urlset>`);
     }
   });
 

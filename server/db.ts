@@ -237,7 +237,10 @@ try {
   console.warn("Could not load offline local settings cache file:", err);
 }
 export function getSeedApps(): any[] {
-  return [
+  return [];
+}
+
+const UNUSED_SEED_APPS = [
     {
       id: "mmy-app",
       name: "MMY App",
@@ -479,7 +482,6 @@ export function getSeedApps(): any[] {
       createdAt: new Date(Date.now() - 7200000).toISOString()
     }
   ];
-}
 
 const SUBSCRIBERS_FILE = path.join(process.cwd(), 'server', 'subscribers_config.json');
 const MESSAGES_FILE = path.join(process.cwd(), 'server', 'messages_config.json');
