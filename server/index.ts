@@ -65,6 +65,19 @@ async function startServer() {
   // Let Express trust proxies like Cloudflare and Railway
   app.set("trust proxy", true);
 
+  // Canonical redirect middleware: Redirect all 'www.' traffic to naked canonical 'https://pakalone.online'
+  app.use((req, res, next) => {
+    const host = req.get("host") || "";
+    if (host.startsWith("www.pakalone.online") || host === "www.pakalone.online") {
+      return res.redirect(301, `https://pakalone.online${req.originalUrl}`);
+    }
+    if (host.startsWith("www.")) {
+      const nakedHost = host.substring(4);
+      return res.redirect(301, `https://${nakedHost}${req.originalUrl}`);
+    }
+    next();
+  });
+
   app.use(express.json({ limit: "10mb" }));
   app.use(cors());
 
@@ -1215,6 +1228,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
 
       // Replaces placeholder index title/desc with optimized app ranking properties
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<link\s+rel="canonical"\s+href=".*?"\s*\/?>/gi, `<link rel="canonical" href="https://pakalone.online/game/${appItem.id}" />`);
       
       // Multi-regex patterns to replace description and keywords safely
       html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
@@ -1493,6 +1507,7 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
 
       // Replaces placeholder index title/desc with optimized homepage ranking properties representing verified games portal
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
+      html = html.replace(/<link\s+rel="canonical"\s+href=".*?"\s*\/?>/gi, `<link rel="canonical" href="https://pakalone.online/" />`);
       html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/gi, `<meta name="description" content="${seoDescription}" />`);
       html = html.replace(/<meta\s+name="keywords"\s+content=".*?"\s*\/?>/gi, `<meta name="keywords" content="${seoKeywords}" />`);
       
