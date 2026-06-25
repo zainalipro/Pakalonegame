@@ -1183,10 +1183,6 @@ ${gameDescription ? `Context about the game: ${gameDescription}` : ''}
     }
   });
 
-function isGoogleSearchCrawler(userAgent: string): boolean {
-  return /googlebot|mediapartners-google|adsbot-google|google-safety|google-extended|lighthouse|chrome-lighthouse|google web preview|feedfetcher-google/i.test(userAgent);
-}
-
   // High-fidelity server-side Dynamic SEO metadata injector for individual game pages
   app.get("/game/:id", async (req, res, next) => {
     try {
@@ -1213,19 +1209,9 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       const settings = await fetchAdminSettings();
       const customKws = (appItem.keywords && Array.isArray(appItem.keywords)) ? appItem.keywords.join(', ') : (appItem.keywords || '');
 
-      const userAgent = req.headers['user-agent'] || '';
-      const isBot = isGoogleSearchCrawler(userAgent);
-
-      let seoTitle = `${appItem.name} Game Smart (Online Casino Choice) - APK Download for Pakistan`;
-      let seoDescription = `Download the verified ${appItem.name} Game APK (Best Earning App/Casino) for Android. ${appItem.tagline || 'New trending online earning app free download'}. Secure payout in Pakistan under 10 mins using EasyPaisa & JazzCash. ${appItem.detailedReview ? appItem.detailedReview.slice(0, 140).replace(/"/g, '') + '...' : ''}`;
-      let seoKeywords = `${appItem.name}, ${appItem.name} Game, ${appItem.name} APK, ${appItem.name} Game Smart, ${appItem.name} download, ${appItem.name} Pakistan, free download APK, earn money online, EasyPaisa earning games, online earning Pakistan, paisa kamane wala game${customKws ? ', ' + customKws : ''}`;
-
-      if (isBot) {
-        // Google Search Console Safety Bypass: Serve clean educational/technical specifications
-        seoTitle = `${appItem.name} Android Package - Technical Review & Compatibility Guide`;
-        seoDescription = `In-depth technical analysis, compatibility report, and safety specifications of the ${appItem.name} mobile application for Android. Read verified reviews and device capability indicators.`;
-        seoKeywords = `${appItem.name} review, ${appItem.name} specs, ${appItem.name} tech guide, Android applications, Pakalone software catalog, educational app reviews`;
-      }
+      const seoTitle = `${appItem.name} Game Smart (Online Casino Choice) - APK Download for Pakistan`;
+      const seoDescription = `Download the verified ${appItem.name} Game APK (Best Earning App/Casino) for Android. ${appItem.tagline || 'New trending online earning app free download'}. Secure payout in Pakistan under 10 mins using EasyPaisa & JazzCash. ${appItem.detailedReview ? appItem.detailedReview.slice(0, 140).replace(/"/g, '') + '...' : ''}`;
+      const seoKeywords = `${appItem.name}, ${appItem.name} Game, ${appItem.name} APK, ${appItem.name} Game Smart, ${appItem.name} download, ${appItem.name} Pakistan, free download APK, earn money online, EasyPaisa earning games, online earning Pakistan, paisa kamane wala game${customKws ? ', ' + customKws : ''}`;
 
       // Replaces placeholder index title/desc with optimized app ranking properties
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
@@ -1252,63 +1238,7 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       const payoutSpeedClean = (appItem.withdrawSpeed || 'instant (under 10 minutes)').replace(/"/g, '\\"');
       const supportClean = (appItem.supportContact || 'our Telegram support channel').replace(/"/g, '\\"');
 
-      let jsonLd = '';
-      if (isBot) {
-        // Sanitize JSON-LD schema for Google console safety
-        jsonLd = `
-    <!-- Dynamic SoftwareApplication structured schema built dynamically for ${appNameClean} -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "${appNameClean}",
-      "operatingSystem": "Android",
-      "applicationCategory": "UtilitiesApplication",
-      "downloadUrl": "https://pakalone.online/game/${appItem.id}",
-      "fileSize": "${appItem.apkSize || '30 MB'}",
-      "offers": {
-        "@type": "Offer",
-        "price": "0.00",
-        "priceCurrency": "PKR"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "${ratingValue}",
-        "reviewCount": "${reviewCount}"
-      },
-      "description": "Technical review and compatibility specifications of the ${appNameClean} Android package on Pakalone directory."
-    }
-    </script>
-
-    <!-- Deep QA / FAQ structured schema optimized for Google and AI conversational models -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How to inspect the official ${appNameClean} technical specifications?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "You can inspect the technical characteristics and read our in-depth software review for the ${appNameClean} package directly on Pakalone by visiting https://pakalone.online/game/${appItem.id}."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is ${appNameClean} free to analyze and evaluate?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, ${appNameClean} is a free application to download and evaluate, and the detailed technical report is available free of charge on the Pakalone directory."
-          }
-        }
-      ]
-    }
-    </script>
-        `;
-      } else {
-        // Real user schema with rich conversion terms
-        jsonLd = `
+       const jsonLd = `
     <!-- Dynamic SoftwareApplication structured schema built dynamically for ${appNameClean} -->
     <script type="application/ld+json">
     {
@@ -1375,7 +1305,6 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
     }
     </script>
         `;
-      }
       html = html.replace('</head>', `${jsonLd}\n</head>`);
       
       // Injects custom analytics and header scripts
@@ -1558,19 +1487,9 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       const settings = await fetchAdminSettings();
       const apps = await fetchAllApps();
 
-      const userAgent = req.headers['user-agent'] || '';
-      const isBot = isGoogleSearchCrawler(userAgent);
-
-      let seoTitle = settings.custom_meta_title || "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
-      let seoDescription = settings.custom_meta_description || "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
-      let seoKeywords = settings.custom_meta_keywords || "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online";
-
-      if (isBot) {
-        // GSC Safety Bypass: Swap out gambling/slots terms for highly compliant technical utility directory terms
-        seoTitle = "Pakalone - Technical Directory of Verified Android Utilities & Mobile Reviews";
-        seoDescription = "Welcome to Pakalone, an independent educational catalog and technical review archive for mobile applications and Android software utilities in Pakistan.";
-        seoKeywords = "Pakalone, Android software review, mobile specifications guide, technical app analysis, educational utility catalog, Pakalone directory";
-      }
+      const seoTitle = settings.custom_meta_title || "Pakalone - #1 Trusted Verified Earning Apps & Games Portal Pakistan";
+      const seoDescription = settings.custom_meta_description || "Welcome to Pakalone Games, the #1 trusted directory for 100% verified online earning apps, gaming APKs, and fast payout platforms in Pakistan. Find reliable ways to earn online with EasyPaisa and JazzCash withdrawals.";
+      const seoKeywords = settings.custom_meta_keywords || "Pakalone, Paklone, MMY app download, CX777 APK, Jeeto786 download Pakistan, Pakistani casino games APK, online earning games Pakistan, game download karo, paise kamao, free download APK Pakistan, 92BAR APK, ISB15, All Slots 777 download, EasyPaisa earning games, JazzCash slots APK, Pakistani real money games, slots games online";
 
       // Replaces placeholder index title/desc with optimized homepage ranking properties representing verified games portal
       html = html.replace(/<title>.*?<\/title>/gi, `<title>${seoTitle}</title>`);
@@ -1588,72 +1507,7 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       }
 
       // Structured JSON-LD Data for WebSite, Organisation, and FAQ schemas crawl optimization
-      let jsonLd = '';
-      if (isBot) {
-        jsonLd = `
-    <!-- Dynamic WebSite search indexing schema tag built specifically for home rankings -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Pakalone",
-      "url": "https://pakalone.online",
-      "description": "${seoDescription.replace(/"/g, '\\"')}",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://pakalone.online/?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-
-    <!-- Dynamic Organization schema optimized for regional representation in search -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Pakalone Reviews",
-      "url": "https://pakalone.online",
-      "logo": "https://pakalone.online/logo.svg",
-      "description": "Pakistan's premium independent technical reviews and software directory.",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer support",
-        "areaServed": "PK",
-        "availableLanguage": ["Urdu", "English"]
-      }
-    }
-    </script>
-
-    <!-- General Portal FAQ structured schema for high relevance in AI conversational answers -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is Pakalone?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Pakalone is an independent technical evaluation and review directory for mobile software packages and Android utilities. We analyze software security, package requirements, compatibility, and size."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How are applications reviewed on Pakalone?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Every listed package is thoroughly audited for safety against malware, compatibility across low-end mobile devices, and rated by technical administrators."
-          }
-        }
-      ]
-    }
-    </script>
-        `;
-      } else {
-        // Real user schema
-        jsonLd = `
+      const jsonLd = `
     <!-- Dynamic WebSite search indexing schema tag built specifically for home rankings -->
     <script type="application/ld+json">
     {
@@ -1721,8 +1575,7 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       ]
     }
     </script>
-        `;
-      }
+      `;
       html = html.replace('</head>', `${jsonLd}\n</head>`);
       
       // Injects custom analytics and header scripts
@@ -1731,15 +1584,11 @@ function isGoogleSearchCrawler(userAgent: string): boolean {
       }
 
       // Pre-renders a static list of all database games directly inside our root element for high-quality, search-engine crawlable SEO reference
-      let staticGamesHtml = `\n<div id="root">\n  <div style="display:none" aria-hidden="true" class="sr-only">\n    <h1>${isBot ? 'Pakalone Reviews - Technical Directory of Android Software Packages' : 'PakAlone Games - Pakistan\'s #1 Earning & Casino Games Directory'}</h1>\n    <ul>\n`;
+      let staticGamesHtml = `\n<div id="root">\n  <div style="display:none" aria-hidden="true" class="sr-only">\n    <h1>PakAlone Games - Pakistan's #1 Earning & Casino Games Directory</h1>\n    <ul>\n`;
       if (Array.isArray(apps) && apps.length > 0) {
         apps.forEach((gameItem: any) => {
           if (gameItem && gameItem.id) {
-            if (isBot) {
-              staticGamesHtml += `      <li>\n        <a href="/game/${gameItem.id}">${gameItem.name} Software Package Technical Review & Guide</a>\n        <p>Comprehensive technical metrics, system requirements, and administrator security evaluations for ${gameItem.name}.</p>\n      </li>\n`;
-            } else {
-              staticGamesHtml += `      <li>\n        <a href="/game/${gameItem.id}">${gameItem.name} APK Download</a> - ${gameItem.tagline || 'Verified Earning Game Pakistan'}\n        <p>${gameItem.detailedReview ? gameItem.detailedReview.slice(0, 200).replace(/"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'Download official verified slots and casino APK safely.'}</p>\n      </li>\n`;
-            }
+            staticGamesHtml += `      <li>\n        <a href="/game/${gameItem.id}">${gameItem.name} APK Download</a> - ${gameItem.tagline || 'Verified Earning Game Pakistan'}\n        <p>${gameItem.detailedReview ? gameItem.detailedReview.slice(0, 200).replace(/"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'Download official verified slots and casino APK safely.'}</p>\n      </li>\n`;
           }
         });
       }
