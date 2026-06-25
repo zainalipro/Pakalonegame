@@ -481,8 +481,64 @@ export function getSeedApps(): any[] {
   ];
 }
 
+const SUBSCRIBERS_FILE = path.join(process.cwd(), 'server', 'subscribers_config.json');
+const MESSAGES_FILE = path.join(process.cwd(), 'server', 'messages_config.json');
+
 let memorySubscribers: any[] = [];
+try {
+  if (fs.existsSync(SUBSCRIBERS_FILE)) {
+    const fileContent = fs.readFileSync(SUBSCRIBERS_FILE, 'utf-8');
+    const parsed = JSON.parse(fileContent);
+    if (Array.isArray(parsed)) {
+      memorySubscribers = parsed.map(s => ({
+        ...s,
+        subscribed_at: s.subscribed_at ? new Date(s.subscribed_at) : new Date()
+      }));
+      console.log("⚙️ Loaded offline subscribers from local subscribers_config.json cache.");
+    }
+  }
+} catch (err) {
+  console.warn("Could not load offline local subscribers cache file:", err);
+}
+
+function saveMemorySubscribersLocally() {
+  try {
+    const dir = path.dirname(SUBSCRIBERS_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(memorySubscribers, null, 2), 'utf-8');
+    console.log("💾 Offline subscribers persisted to subscribers_config.json cache file.");
+  } catch (err) {
+    console.error("Failed to write offline local subscribers cache file:", err);
+  }
+}
+
 let memoryMessages: any[] = [];
+try {
+  if (fs.existsSync(MESSAGES_FILE)) {
+    const fileContent = fs.readFileSync(MESSAGES_FILE, 'utf-8');
+    const parsed = JSON.parse(fileContent);
+    if (Array.isArray(parsed)) {
+      memoryMessages = parsed.map(m => ({
+        ...m,
+        submittedAt: m.submittedAt ? new Date(m.submittedAt) : new Date()
+      }));
+      console.log("⚙️ Loaded offline messages from local messages_config.json cache.");
+    }
+  }
+} catch (err) {
+  console.warn("Could not load offline local messages cache file:", err);
+}
+
+function saveMemoryMessagesLocally() {
+  try {
+    const dir = path.dirname(MESSAGES_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(MESSAGES_FILE, JSON.stringify(memoryMessages, null, 2), 'utf-8');
+    console.log("💾 Offline user messages persisted to messages_config.json cache file.");
+  } catch (err) {
+    console.error("Failed to write offline local messages cache file:", err);
+  }
+}
 
 const APPS_FILE = path.join(process.cwd(), 'server', 'apps_config.json');
 
@@ -1196,6 +1252,7 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
         game_name: gameName || null,
         subscribed_at: new Date() 
       });
+      saveMemorySubscribersLocally();
     }
     return true;
   }
@@ -1222,6 +1279,7 @@ export async function addSubscriber(email: string, ipAddress?: string, country?:
         game_name: gameName || null,
         subscribed_at: new Date() 
       });
+      saveMemorySubscribersLocally();
     }
     return true;
   }
@@ -1307,6 +1365,7 @@ export async function removeSubscriber(email: string) {
 
   if (useMemoryDb) {
     memorySubscribers = memorySubscribers.filter(s => s.email !== email);
+    saveMemorySubscribersLocally();
     return true;
   }
   try {
@@ -1315,6 +1374,7 @@ export async function removeSubscriber(email: string) {
   } catch (error) {
     console.error("removeSubscriber failed, removing from memory active list:", error);
     memorySubscribers = memorySubscribers.filter(s => s.email !== email);
+    saveMemorySubscribersLocally();
     return true;
   }
 }
@@ -1359,6 +1419,7 @@ export async function submitUserMessage(name: string, email: string, subject: st
       submittedAt: new Date()
     };
     memoryMessages.push(newMessage);
+    saveMemoryMessagesLocally();
     return newMessage;
   }
   try {
@@ -1381,6 +1442,7 @@ export async function submitUserMessage(name: string, email: string, subject: st
       submittedAt: new Date()
     };
     memoryMessages.push(newMessage);
+    saveMemoryMessagesLocally();
     return newMessage;
   }
 }
